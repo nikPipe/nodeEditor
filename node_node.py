@@ -2,6 +2,8 @@ from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphic_node import QDmGraphicsNode
 from nodeEditor.node_content_widget import QDMNodeContentWidget
+from nodeEditor.node_socket import Socket
+from nodeEditor.node_socket import LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
 
 
 class Node():
@@ -22,9 +24,42 @@ class Node():
 
         self.content = QDMNodeContentWidget()
         self.grNode = QDmGraphicsNode(self)
+
+
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
 
+        self.socket_spacing = 22
 
+
+        # create socket for inputs and outputs
         self.inputs = []
         self.outputs = []
+        counter = 0
+        for item in inputs:
+            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM)
+            self.inputs.append(socket)
+            counter += 1
+
+        counter = 0
+        for item in outputs:
+            socket = Socket(node=self, index=counter, position=RIGHT_TOP)
+            self.outputs.append(socket)
+            counter += 1
+
+    def getSocketPosition(self, index, position):
+        '''
+        get the position of the socket
+        :param index:
+        :param position:
+        :return:
+        '''
+        x = 0 if position in [LEFT_TOP, LEFT_BOTTOM] else self.grNode.width
+        if position in [LEFT_BOTTOM, RIGHT_BOTTOM]:
+            # start from the bottom
+            y = self.grNode.height - self.grNode.edge_size - self.grNode._padding - index * self.socket_spacing
+        else:
+            y =  self.grNode.title_height + self.grNode._padding + self.grNode.edge_size + index * 22
+
+        return [x, y]
+

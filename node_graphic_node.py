@@ -40,6 +40,7 @@ class QDmGraphicsNode(QGraphicsItem):
         self.title = self.node.title
 
         #INIT SOCKET
+        self.initSockets()
 
         #INIT CONTENT
         self.initContent()
@@ -52,10 +53,8 @@ class QDmGraphicsNode(QGraphicsItem):
         :return:
         '''
         return QRectF(0, 0,
-                      (2 * self.edge_size + self.width),
-                      (2 * self.edge_size + self.height)).normalized()
-
-
+                      (self.width),
+                      (self.height)).normalized()
 
     def initTitle(self):
         '''
@@ -67,7 +66,6 @@ class QDmGraphicsNode(QGraphicsItem):
         self.title_item.setDefaultTextColor(self._title_color)
         self.title_item.setPos(self._padding, 0)
         self.title_item.setTextWidth(self.width - 2 * self._padding)
-
 
     def initContent(self):
         '''
@@ -81,6 +79,8 @@ class QDmGraphicsNode(QGraphicsItem):
                                  int(self.height - 2 * self.edge_size - self.title_height))
         self.grContent.setWidget(self.content)
 
+    def initSockets(self):
+        pass
 
     def initUI(self):
         '''

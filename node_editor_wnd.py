@@ -29,7 +29,7 @@ class NodeEditorWnd(QWidget):
         self.scene = Scene()
 
 
-        nodeOne = Node(self.scene, "My Awesome Node 1", inputs=[0, 1, 2], outputs=[3, 4])
+        nodeOne = Node(self.scene, "My Awesome Node 1", inputs=[0, 1, 2, 3, 4], outputs=[1, 2, 3, 4])
 
 
 

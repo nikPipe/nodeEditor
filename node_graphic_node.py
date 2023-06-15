@@ -3,7 +3,7 @@ from PyQt import sample_widget_template, color_variable, styleSheet
 
 
 class QDmGraphicsNode(QGraphicsItem):
-    def __init__(self, node, title='Node GraphicsItem', parent=None):
+    def __init__(self, node, parent=None):
         '''
 
         :param node:
@@ -14,8 +14,10 @@ class QDmGraphicsNode(QGraphicsItem):
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
 
-        self._title = title
+
         self.node = node
+        self.content = self.node.content
+        self._title = self.node.title
 
         self._title_color = Qt.white
         self._title_font = QFont("Ubuntu", 10)
@@ -35,8 +37,12 @@ class QDmGraphicsNode(QGraphicsItem):
         self._brush_background = QBrush(QColor("#E3212121"))
 
         self.initTitle()
-        self.title = title
+        self.title = self.node.title
 
+        #INIT SOCKET
+
+        #INIT CONTENT
+        self.initContent()
 
         self.initUI()
 
@@ -49,13 +55,7 @@ class QDmGraphicsNode(QGraphicsItem):
                       (2 * self.edge_size + self.width),
                       (2 * self.edge_size + self.height)).normalized()
 
-    def initUI(self):
-        '''
 
-        :return:
-        '''
-        self.setFlag(QGraphicsItem.ItemIsSelectable)
-        self.setFlag(QGraphicsItem.ItemIsMovable)
 
     def initTitle(self):
         '''
@@ -67,6 +67,31 @@ class QDmGraphicsNode(QGraphicsItem):
         self.title_item.setDefaultTextColor(self._title_color)
         self.title_item.setPos(self._padding, 0)
         self.title_item.setTextWidth(self.width - 2 * self._padding)
+
+
+    def initContent(self):
+        '''
+
+        :return:
+        '''
+        self.grContent = QGraphicsProxyWidget(self)
+        self.content.setGeometry(int(self.edge_size),
+                                 int(self.title_height + self.edge_size),
+                                 int(self.width - 2 * self.edge_size),
+                                 int(self.height - 2 * self.edge_size - self.title_height))
+
+
+        self.grContent.setWidget(self.content)
+
+
+    def initUI(self):
+        '''
+
+        :return:
+        '''
+        self.setFlag(QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.ItemIsMovable)
+
 
 
     @property
@@ -116,9 +141,6 @@ class QDmGraphicsNode(QGraphicsItem):
         painter.setPen(Qt.NoPen)
         painter.setBrush(self._brush_background)
         painter.drawPath(path_content.simplified())
-        
-
-
 
 
         #OUTLINE

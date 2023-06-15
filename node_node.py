@@ -1,6 +1,7 @@
 from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphic_node import QDmGraphicsNode
+from nodeEditor.node_content_widget import QDMNodeContentWidget
 
 
 class Node():
@@ -19,9 +20,11 @@ class Node():
         self.scene = scene
         self.title = title
 
-        self.grNode = QDmGraphicsNode(self, title)
+        self.content = QDMNodeContentWidget()
+        self.grNode = QDmGraphicsNode(self)
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
+
 
         self.inputs = []
         self.outputs = []

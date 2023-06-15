@@ -79,8 +79,6 @@ class QDmGraphicsNode(QGraphicsItem):
                                  int(self.title_height + self.edge_size),
                                  int(self.width - 2 * self.edge_size),
                                  int(self.height - 2 * self.edge_size - self.title_height))
-
-
         self.grContent.setWidget(self.content)
 
 

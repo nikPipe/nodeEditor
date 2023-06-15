@@ -1,7 +1,7 @@
 from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
-from nodeEditor.node_graphics_scene import QDMGraphicScene
 from nodeEditor.node_graphics_view import QDMGraphicsView
+from nodeEditor.node_scene import Scene
 
 
 class NodeEditorWnd(QWidget):
@@ -25,7 +25,8 @@ class NodeEditorWnd(QWidget):
         self.setLayout(self.layout)
 
         # CREATE GRAPHICS SCENE
-        self.grScene = QDMGraphicScene(self)
+        self.scene = Scene()
+        self.grScene = self.scene.grScene
 
 
         #CREATE GRAPHICS VIEW

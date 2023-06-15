@@ -84,7 +84,7 @@ class QDMGraphicsView(QGraphicsView):
         :param event:
         :return:
         '''
-        print('Left mouse button pressed')
+        super().mousePressEvent(event)
 
     def rightMouseButtonPress(self, event):
         '''
@@ -92,7 +92,7 @@ class QDMGraphicsView(QGraphicsView):
         :param event:
         :return:
         '''
-        print('Right mouse button pressed')
+        super().mousePressEvent(event)
 
     def middleMouseButtonRelease(self, event):
         '''
@@ -112,7 +112,7 @@ class QDMGraphicsView(QGraphicsView):
         :param event:
         :return:
         '''
-        print('Left mouse button released')
+        super().mouseReleaseEvent(event)
 
     def rightMouseButtonRelease(self, event):
         '''
@@ -120,7 +120,7 @@ class QDMGraphicsView(QGraphicsView):
         :param event:
         :return:
         '''
-        print('Right mouse button released')
+        super().mouseReleaseEvent(event)
 
     def wheelEvent(self, event):
         '''

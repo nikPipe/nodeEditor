@@ -2,6 +2,7 @@ from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphics_view import QDMGraphicsView
 from nodeEditor.node_scene import Scene
+from nodeEditor.node_node import Node
 
 
 class NodeEditorWnd(QWidget):
@@ -26,18 +27,22 @@ class NodeEditorWnd(QWidget):
 
         # CREATE GRAPHICS SCENE
         self.scene = Scene()
-        self.grScene = self.scene.grScene
+
+
+        nodeOne = Node(self.scene, "My Awesome Node 1", inputs=[0, 1, 2], outputs=[3, 4])
+
+
 
 
         #CREATE GRAPHICS VIEW
-        self.view = QDMGraphicsView(self.grScene, self)
+        self.view = QDMGraphicsView(self.scene.grScene, self)
         self.layout.addWidget(self.view)
 
         self.setWindowTitle('Node Editor')
 
         self.show()
 
-        self.addDebugContent()
+        #self.addDebugContent()
 
 
     def addDebugContent(self):

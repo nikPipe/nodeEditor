@@ -3,6 +3,7 @@ from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphics_view import QDMGraphicsView
 from nodeEditor.node_scene import Scene
 from nodeEditor.node_node import Node
+from nodeEditor.node_edge import *
 
 
 class NodeEditorWnd(QWidget):
@@ -29,8 +30,9 @@ class NodeEditorWnd(QWidget):
         self.scene = Scene()
 
 
-        nodeOne = Node(self.scene, "My Awesome Node 1", inputs=[0, 1, 2, 3, 4], outputs=[1, 2, 3, 4])
 
+
+        self.addNodes()
 
 
 
@@ -43,6 +45,23 @@ class NodeEditorWnd(QWidget):
         self.show()
 
         #self.addDebugContent()
+
+    def addNodes(self):
+        '''
+
+        :return:
+        '''
+        node1 = Node(self.scene, "My Awesome Node 1", inputs=[0, 1, 2, 3, 4], outputs=[1, 2, 3, 4])
+        node2 = Node(self.scene, "My Awesome Node 2", inputs=[0, 1, 2, 3, 4], outputs=[1, 2, 3, 4])
+        node3 = Node(self.scene, "My Awesome Node 3", inputs=[0, 1, 2, 3, 4], outputs=[1, 2, 3, 4])
+
+        node1.setPos(-350, -250)
+        node2.setPos(-75, 0)
+        node3.setPos(200, -150)
+
+        edge = Edge(self.scene, node1.outputs[0], node2.inputs[0])
+        edge = Edge(self.scene, node2.outputs[0], node3.inputs[0], type=EDGE_TYPE_BEZIER)
+
 
 
     def addDebugContent(self):

@@ -63,3 +63,20 @@ class Node():
 
         return [x, y]
 
+    @property
+    def pos(self):
+        '''
+        get the position of the node
+        :return:
+        '''
+        return self.grNode.pos()
+
+    def setPos(self, x, y):
+        '''
+        set the position of the node
+        :param x:
+        :param y:
+        :return:
+        '''
+        self.grNode.setPos(x, y)
+

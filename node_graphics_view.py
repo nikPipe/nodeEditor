@@ -39,6 +39,7 @@ class QDMGraphicsView(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setDragMode(QGraphicsView.RubberBandDrag)
 
     def mousePressEvent(self, event):
         '''
@@ -91,9 +92,20 @@ class QDMGraphicsView(QGraphicsView):
         :param event:
         :return:
         '''
-
         item = self.getItemAtClick(event)
         self.last_lmb_click_scene_pos = self.mapToScene(event.pos())
+
+        if hasattr(item, 'node') or isinstance(item, QDMGraphicsEdge) or item is None:
+            if event.modifiers() & Qt.ShiftModifier:
+                print('Left Shift + LMB on Node : {}'.format(item))
+                event.ignore()
+                fake_event = QMouseEvent(QEvent.MouseButtonPress, event.localPos(), event.screenPos(),
+                                         Qt.LeftButton, event.buttons() | Qt.LeftButton,
+                                         event.modifiers() | Qt.ControlModifier)
+                super().mousePressEvent(fake_event)
+                return
+
+
         if type(item) is QDMGraphicsSocket:
             if self.mode == MODE_NOOP:
                 self.mode = MODE_EDGE_DRAG
@@ -210,9 +222,18 @@ class QDMGraphicsView(QGraphicsView):
         :return:
         '''
         item = self.getItemAtClick(event)
+
+        if hasattr(item, 'node') or isinstance(item, QDMGraphicsEdge) or item is None:
+            if event.modifiers() & Qt.ShiftModifier:
+                print('Left Rlease Shift + LMB on Node : {}'.format(item))
+                event.ignore()
+                fake_event = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
+                                         Qt.LeftButton, Qt.NoButton,
+                                         event.modifiers() | Qt.ControlModifier)
+                super().mouseReleaseEvent(fake_event)
+                return
+
         if self.mode == MODE_EDGE_DRAG:
-
-
             if self.mode == MODE_EDGE_DRAG:
                 if self.distanceBetweenClickAndRelease(event):
                     res = self.edgeDragEnd(item)

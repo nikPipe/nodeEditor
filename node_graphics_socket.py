@@ -16,8 +16,7 @@ class QDMGraphicsSocket(QGraphicsItem):
             QColor("#FFb51d14"),
             QColor("#FFdeb500"),
             QColor("#FF9500b5"),
-
-        ]
+            QColor("#FF00c9b5")]
 
         self.radius = 6
         self.outline_width = 1

@@ -21,7 +21,7 @@ class Socket():
         self.position = position
         self.socket_type = socket_type
 
-        self.grSocket = QDMGraphicsSocket(self.node.grNode, self.socket_type)
+        self.grSocket = QDMGraphicsSocket(self.node.grNode, self.socket_type, self)
         self.grSocket.setPos(*self.node.getSocketPosition(index, position))
 
         self.edge = None
@@ -47,3 +47,10 @@ class Socket():
         :return:
         '''
         return self.edge is not None
+
+    def __str__(self):
+        '''
+
+        :return:
+        '''
+        return "<%s %s..%s>" % (self.__class__.__name__, hex(id(self))[2:5], hex(id(self))[-3:])

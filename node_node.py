@@ -90,3 +90,10 @@ class Node():
             if socket.hasEdge():
                 socket.edge.updatePositions()
 
+
+    def __str__(self):
+        '''
+
+        :return:
+        '''
+        return "<%s %s..%s>" % (self.__class__.__name__, hex(id(self))[2:5], hex(id(self))[-3:])

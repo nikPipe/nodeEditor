@@ -3,9 +3,10 @@ from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 
 class QDMGraphicsSocket(QGraphicsItem):
-    def __init__(self, parent=None,  socket_type=True):
+    def __init__(self, parent=None,  socket_type=True, socket=None):
         super().__init__(parent=parent)
 
+        self.socket = socket
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()

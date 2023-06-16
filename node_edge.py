@@ -30,6 +30,8 @@ class Edge():
         self.grEdge = QDMGraphicsEdgeDirect(self) if edge_type == EDGE_TYPE_DIRECT else QDMGraphicsEdgeBasier(self)
         self.updatePositions()
         self.scene.grScene.addItem(self.grEdge)
+        self.scene.addEdge(self)
+
 
     def updatePositions(self):
         '''
@@ -45,6 +47,8 @@ class Edge():
             end_pos[0] += self.end_socket.node.grNode.pos().x()
             end_pos[1] += self.end_socket.node.grNode.pos().y()
             self.grEdge.setDestination(*end_pos)
+        else:
+            self.grEdge.setDestination(*source_pos)
 
         self.grEdge.update()
 
@@ -69,6 +73,10 @@ class Edge():
         self.scene.grScene.removeItem(self.grEdge)
         self.grEdge = None
         self.scene.removeEdge(self)
-            
 
+    def __str__(self):
+        '''
 
+        :return:
+        '''
+        return "<%s %s..%s>" % (self.__class__.__name__, hex(id(self))[2:5], hex(id(self))[-3:])

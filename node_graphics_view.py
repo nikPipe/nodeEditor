@@ -4,6 +4,9 @@ from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphics_scene import QDMGraphicScene
 from nodeEditor.node_graphics_socket import QDMGraphicsSocket
+from nodeEditor.node_graphics_edge import QDMGraphicsEdge
+from nodeEditor.node_edge import *
+
 
 MODE_NOOP = 1
 MODE_EDGE_DRAG = 2
@@ -111,6 +114,23 @@ class QDMGraphicsView(QGraphicsView):
         '''
         super().mousePressEvent(event)
 
+        item = self.getItemAtClick(event)
+        if isinstance(item, QDMGraphicsEdge):
+            print(item.edge, '  connected sockets: ', item.edge.start_socket, '<------->',item.edge.end_socket)
+
+        if type(item) is QDMGraphicsSocket:
+            print(item.socket, ' has Edge: ', item.socket.edge)
+
+        if item is None:
+            print('Scene:')
+            print('Nodes:')
+            for node in self.grScene.scene.nodes:
+                print('  {}'.format(node))
+            print('Edges:')
+            for edge in self.grScene.scene.edges:
+                print('  {}'.format(edge))
+            print('Socket:')
+
     def middleMouseButtonRelease(self, event):
         '''
 
@@ -129,8 +149,12 @@ class QDMGraphicsView(QGraphicsView):
         :return:
         '''
         print('Start dragging edge')
-        print('  assign start socket')
+        print('  assign start socket', item.socket)
+        self.prev_edge = item.socket.edge
+        self.last_start_socket = item.socket
 
+        self.dragging_edge = Edge(self.grScene.scene, item.socket, None, EDGE_TYPE_BEZIER)
+        print('Edge drag start: ', self.dragging_edge, ' from ', self.dragging_edge.start_socket)
 
     def edgeDragEnd(self, item):
         '''
@@ -141,8 +165,30 @@ class QDMGraphicsView(QGraphicsView):
         self.mode = MODE_NOOP
         print('End dragging edge')
         if type(item) is QDMGraphicsSocket:
-            print('  Assign end Socket')
+            print('  previous Edge: ', self.prev_edge)
+            if item.socket.hasEdge():
+                item.socket.edge.remove()
+
+            print('  Assign end Socket ', item.socket)
+            if self.prev_edge is not None:
+                self.prev_edge.remove()
+
+            self.dragging_edge.start_socket = self.last_start_socket
+            self.dragging_edge.end_socket = item.socket
+            self.dragging_edge.start_socket.setConnectedEdge(self.dragging_edge)
+            self.dragging_edge.end_socket.setConnectedEdge(self.dragging_edge)
+            self.dragging_edge.updatePositions()
+
+            print('  Created: ', self.dragging_edge)
+
             return True
+
+        self.dragging_edge.remove()
+        self.dragging_edge = None
+
+        if self.prev_edge is not None:
+            self.prev_edge.start_socket.edge = self.prev_edge
+
 
         return False
 
@@ -181,6 +227,9 @@ class QDMGraphicsView(QGraphicsView):
         :return:
         '''
         super().mouseReleaseEvent(event)
+
+
+
 
     def wheelEvent(self, event):
         '''
@@ -221,4 +270,18 @@ class QDMGraphicsView(QGraphicsView):
         return obj
 
 
+    def mouseMoveEvent(self, event):
+        '''
+
+        :param event:
+        :return:
+        '''
+        if self.mode == MODE_EDGE_DRAG:
+            pos = self.mapToScene(event.pos())
+            self.dragging_edge.grEdge.setDestination(pos.x(), pos.y())
+            self.dragging_edge.grEdge.update()
+
+
+
+        super().mouseMoveEvent(event)
 

@@ -3,17 +3,26 @@ from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 
 class QDMGraphicsSocket(QGraphicsItem):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None,  socket_type=True):
         super().__init__(parent=parent)
 
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
+        self.color =[
+            QColor("#FFFF7700"),
+            QColor("#FF52e220"),
+            QColor("#FF0056a6"),
+            QColor("#FFb51d14"),
+            QColor("#FFdeb500"),
+            QColor("#FF9500b5"),
+
+        ]
 
         self.radius = 6
         self.outline_width = 1
 
-        self._color_background = QColor("#FFFF7700")
+        self._color_background = self.color[socket_type]
         self._color_outline = QColor("#FF000000")
 
         self._pen = QPen(self._color_outline)

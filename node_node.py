@@ -37,13 +37,13 @@ class Node():
         self.outputs = []
         counter = 0
         for item in inputs:
-            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM)
+            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item)
             self.inputs.append(socket)
             counter += 1
 
         counter = 0
         for item in outputs:
-            socket = Socket(node=self, index=counter, position=RIGHT_TOP)
+            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item)
             self.outputs.append(socket)
             counter += 1
 
@@ -79,4 +79,14 @@ class Node():
         :return:
         '''
         self.grNode.setPos(x, y)
+
+
+    def updateConnectedEdges(self):
+        '''
+        update the connected edges
+        :return:
+        '''
+        for socket in self.inputs + self.outputs:
+            if socket.hasEdge():
+                socket.edge.updatePositions()
 

@@ -22,8 +22,6 @@ class QDmGraphicsNode(QGraphicsItem):
         self._title_color = Qt.white
         self._title_font = QFont("Ubuntu", 10)
 
-
-
         self.width = 180
         self.height = 240
         self.edge_size = 10.0
@@ -90,6 +88,16 @@ class QDmGraphicsNode(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemIsMovable)
 
+
+
+    def mouseMoveEvent(self, event):
+        '''
+
+        :param event:
+        :return:
+        '''
+        super().mouseMoveEvent(event)
+        self.node.updateConnectedEdges()
 
 
     @property

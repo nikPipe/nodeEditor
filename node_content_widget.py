@@ -1,7 +1,8 @@
 from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
-
-class QDMNodeContentWidget(QWidget):
+from collections import OrderedDict
+from nodeEditor.node_sertializable import Serializable
+class QDMNodeContentWidget(QWidget, Serializable):
     def __init__(self, node, parent=None):
         super().__init__(parent)
 
@@ -28,6 +29,17 @@ class QDMNodeContentWidget(QWidget):
 
     def setEditingFlag(self, val):
         self.node.scene.grScene.views()[0].editingFlag = val
+
+
+    def serialize(self):
+        return OrderedDict([
+            ('id', self.node.id),
+            ('content', 'content')
+        ])
+
+    def deserialize(self, data, hashmap={}):
+        print("deserializing node content for %s" % self.node.id)
+        return True
 
 
 

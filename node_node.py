@@ -5,8 +5,9 @@ from nodeEditor.node_content_widget import QDMNodeContentWidget
 from nodeEditor.node_socket import Socket
 from nodeEditor.node_socket import LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
 
-
-class Node():
+from collections import OrderedDict
+from nodeEditor.node_sertializable import Serializable
+class Node(Serializable):
     def __init__(self, scene, title="Undefined Node", inputs=[], outputs=[]):
         '''
 
@@ -15,6 +16,7 @@ class Node():
         :param inputs:
         :param outputs:
         '''
+        super().__init__()
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
@@ -117,5 +119,32 @@ class Node():
         print (" - remove all sockets from scene")
         print (" - remove node from scene")
         self.scene.removeNode(self)
+
+
+    def serialize(self):
+        '''
+
+        :return:
+        '''
+        dic_val = OrderedDict()
+        dic_val['id'] = self.id
+        dic_val['title'] = self.title
+        dic_val['pos_x'] = self.grNode.scenePos().x()
+        dic_val['pos_y'] = self.grNode.scenePos().y()
+        dic_val['inputs'] = [socket.serialize() for socket in self.inputs]
+        dic_val['outputs'] = [socket.serialize() for socket in self.outputs]
+        dic_val['content'] = self.content.serialize()
+
+        return dic_val
+
+    def deserialize(self, data, hashmap={}):
+        '''
+
+        :param data:
+        :param hashmap:
+        :return:
+        '''
+        print('deserialize: ', data)
+        return False
 
 

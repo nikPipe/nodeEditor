@@ -1,19 +1,24 @@
 from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphics_edge import *
+from collections import OrderedDict
+from nodeEditor.node_sertializable import Serializable
 
 EDGE_TYPE_DIRECT = 1
 EDGE_TYPE_BEZIER = 2
 
 
 
-class Edge():
+
+
+class Edge(Serializable):
     def __init__(self, scene, start_socket, end_socket, edge_type=EDGE_TYPE_DIRECT):
         '''
         :param scene:
         :param start_socket:
         :param end_socket:
         '''
+        super().__init__()
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
@@ -22,6 +27,7 @@ class Edge():
 
         self.start_socket = start_socket
         self.end_socket = end_socket
+        self.edge_type = edge_type
 
         self.start_socket.edge = self
         if self.end_socket is not None:
@@ -82,3 +88,27 @@ class Edge():
         :return:
         '''
         return "<%s %s..%s>" % (self.__class__.__name__, hex(id(self))[2:5], hex(id(self))[-3:])
+
+
+    def serialize(self):
+        '''
+
+        :return:
+        '''
+        print('serialize: ', self)
+        dic_val = OrderedDict()
+        dic_val['id'] = self.id
+        dic_val['type'] = self.edge_type
+        dic_val['start'] = self.start_socket.id
+        dic_val['end'] = self.end_socket.id if self.end_socket is not None else None
+        return dic_val
+
+    def deserialize(self, data, hashmap={}):
+        '''
+
+        :param data:
+        :param hashmap:
+        :return:
+        '''
+        print('deserialize: ', data)
+        return False

@@ -4,6 +4,8 @@ from nodeEditor.node_graphics_scene import QDMGraphicScene
 import json
 from collections import OrderedDict
 from nodeEditor.node_sertializable import Serializable
+from nodeEditor.node_node import Node
+from nodeEditor.node_edge import Edge
 
 
 class Scene(Serializable):
@@ -64,6 +66,13 @@ class Scene(Serializable):
         '''
         self.edges.remove(edge)
 
+    def clear(self):
+        '''
+
+        :return:
+        '''
+        while len(self.nodes) > 0:
+            self.nodes[0].remove()
 
     def saveToFile(self, filename):
         '''
@@ -78,16 +87,16 @@ class Scene(Serializable):
         print('saveJson: ', filename)
 
 
-    def loadFromPickle(self, filename):
+    def loadFromFile(self, filename):
         '''
 
         :param filename:
         :return:
         '''
         with open(filename, 'r') as file:
-            data = json.loads(file.read(), encoding='utf-8')
+            raw_data = file.read()
+            data = json.loads(raw_data)
             self.deserialize(data)
-
 
     def serialize(self):
         '''
@@ -120,8 +129,18 @@ class Scene(Serializable):
         :param hashmap:
         :return:
         '''
-        print('deserialize: ', data)
-        return False
+        self.clear()
+
+        hashmap = {}
+        #CREATE NODES
+        for node_data in data['nodes']:
+            Node(self).deserialize(node_data, hashmap)
+
+        #CREATE EDGES
+        for edge_data in data['edges']:
+            Edge(self).deserialize(edge_data, hashmap)
+
+        return True
 
 
 

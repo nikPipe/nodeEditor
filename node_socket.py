@@ -86,5 +86,9 @@ class Socket(Serializable):
         :param hashmap:
         :return:
         '''
-        print('deserialize: ', data)
-        return False
+
+        self.id = data['id']
+        hashmap[data['id']] = self
+
+
+        return True

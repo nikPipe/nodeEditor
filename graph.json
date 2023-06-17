@@ -1,40 +1,40 @@
 {
-    "id": 1848583874320,
+    "id": 1976581554288,
     "scene_width": 64000,
     "scene_height": 64000,
     "nodes": [
         {
-            "id": 1848590354656,
+            "id": 1976581595648,
             "title": "My Awesome Node 1",
-            "pos_x": -350.0,
-            "pos_y": -250.0,
+            "pos_x": 108.0,
+            "pos_y": -242.0,
             "inputs": [
                 {
-                    "id": 1848590503744,
+                    "id": 1976614774880,
                     "index": 0,
                     "position": 2,
                     "socket_type": 0
                 },
                 {
-                    "id": 1848590503792,
+                    "id": 1976614774928,
                     "index": 1,
                     "position": 2,
                     "socket_type": 1
                 },
                 {
-                    "id": 1848590554528,
+                    "id": 1976614809280,
                     "index": 2,
                     "position": 2,
                     "socket_type": 2
                 },
                 {
-                    "id": 1848590618864,
+                    "id": 1976614857232,
                     "index": 3,
                     "position": 2,
                     "socket_type": 3
                 },
                 {
-                    "id": 1848590650432,
+                    "id": 1976614937952,
                     "index": 4,
                     "position": 2,
                     "socket_type": 4
@@ -42,67 +42,67 @@
             ],
             "outputs": [
                 {
-                    "id": 1848590682000,
+                    "id": 1976614969520,
                     "index": 0,
                     "position": 3,
                     "socket_type": 1
                 },
                 {
-                    "id": 1848590713568,
+                    "id": 1976615001088,
                     "index": 1,
                     "position": 3,
                     "socket_type": 2
                 },
                 {
-                    "id": 1848590728688,
+                    "id": 1976615032656,
                     "index": 2,
                     "position": 3,
                     "socket_type": 3
                 },
                 {
-                    "id": 1848590776640,
+                    "id": 1976615080608,
                     "index": 3,
                     "position": 3,
                     "socket_type": 4
                 }
             ],
             "content": {
-                "id": 1848590354656,
+                "id": 1976581595648,
                 "content": "content"
             }
         },
         {
-            "id": 1848590354704,
+            "id": 1976581595696,
             "title": "My Awesome Node 2",
-            "pos_x": -75.0,
-            "pos_y": 0.0,
+            "pos_x": -97.0,
+            "pos_y": 132.0,
             "inputs": [
                 {
-                    "id": 1848590928096,
+                    "id": 1976615199232,
                     "index": 0,
                     "position": 2,
                     "socket_type": 0
                 },
                 {
-                    "id": 1848590928144,
+                    "id": 1976615199280,
                     "index": 1,
                     "position": 2,
                     "socket_type": 1
                 },
                 {
-                    "id": 1848590976096,
+                    "id": 1976615230848,
                     "index": 2,
                     "position": 2,
                     "socket_type": 2
                 },
                 {
-                    "id": 1848590991216,
+                    "id": 1976615278800,
                     "index": 3,
                     "position": 2,
                     "socket_type": 3
                 },
                 {
-                    "id": 1848591039168,
+                    "id": 1976615326752,
                     "index": 4,
                     "position": 2,
                     "socket_type": 4
@@ -110,67 +110,67 @@
             ],
             "outputs": [
                 {
-                    "id": 1848591087120,
+                    "id": 1976615358320,
                     "index": 0,
                     "position": 3,
                     "socket_type": 1
                 },
                 {
-                    "id": 1848591151456,
+                    "id": 1976615406272,
                     "index": 1,
                     "position": 3,
                     "socket_type": 2
                 },
                 {
-                    "id": 1848591183024,
+                    "id": 1976615454224,
                     "index": 2,
                     "position": 3,
                     "socket_type": 3
                 },
                 {
-                    "id": 1848591230976,
+                    "id": 1976615485792,
                     "index": 3,
                     "position": 3,
                     "socket_type": 4
                 }
             ],
             "content": {
-                "id": 1848590354704,
+                "id": 1976581595696,
                 "content": "content"
             }
         },
         {
-            "id": 1848590503696,
+            "id": 1976614774832,
             "title": "My Awesome Node 3",
-            "pos_x": 200.0,
-            "pos_y": -150.0,
+            "pos_x": -383.0,
+            "pos_y": -240.0,
             "inputs": [
                 {
-                    "id": 1848591349600,
+                    "id": 1976615637184,
                     "index": 0,
                     "position": 2,
                     "socket_type": 0
                 },
                 {
-                    "id": 1848591349648,
+                    "id": 1976615637232,
                     "index": 1,
                     "position": 2,
                     "socket_type": 1
                 },
                 {
-                    "id": 1848619119328,
+                    "id": 1976615685184,
                     "index": 2,
                     "position": 2,
                     "socket_type": 2
                 },
                 {
-                    "id": 1848619150896,
+                    "id": 1976615716752,
                     "index": 3,
                     "position": 2,
                     "socket_type": 3
                 },
                 {
-                    "id": 1848619198848,
+                    "id": 1976616813280,
                     "index": 4,
                     "position": 2,
                     "socket_type": 4
@@ -178,48 +178,54 @@
             ],
             "outputs": [
                 {
-                    "id": 1848619246800,
+                    "id": 1976616828400,
                     "index": 0,
                     "position": 3,
                     "socket_type": 1
                 },
                 {
-                    "id": 1848619294752,
+                    "id": 1976616892736,
                     "index": 1,
                     "position": 3,
                     "socket_type": 2
                 },
                 {
-                    "id": 1848619326320,
+                    "id": 1976616924304,
                     "index": 2,
                     "position": 3,
                     "socket_type": 3
                 },
                 {
-                    "id": 1848619357888,
+                    "id": 1976616955872,
                     "index": 3,
                     "position": 3,
                     "socket_type": 4
                 }
             ],
             "content": {
-                "id": 1848590503696,
+                "id": 1976614774832,
                 "content": "content"
             }
         }
     ],
     "edges": [
         {
-            "id": 1848590354608,
+            "id": 1976581595600,
             "type": 1,
-            "start": 1848590682000,
-            "end": 1848591039168
+            "start": 1976614969520,
+            "end": 1976615326752
         },
         {
-            "id": 1848619488624,
+            "id": 1976617102992,
             "type": 2,
-            "start": 1848591087120,
-            "end": 1848591349600
+            "start": 1976615358320,
+            "end": 1976615637184
+        },
+        {
+            "id": 1976617215616,
+            "type": 2,
+            "start": 1976616828400,
+            "end": 1976614937952
         }
     ]
 }

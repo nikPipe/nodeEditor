@@ -12,7 +12,7 @@ EDGE_TYPE_BEZIER = 2
 
 
 class Edge(Serializable):
-    def __init__(self, scene, start_socket, end_socket, edge_type=EDGE_TYPE_DIRECT):
+    def __init__(self, scene, start_socket=None, end_socket=None, edge_type=EDGE_TYPE_DIRECT):
         '''
         :param scene:
         :param start_socket:
@@ -29,14 +29,73 @@ class Edge(Serializable):
         self.end_socket = end_socket
         self.edge_type = edge_type
 
-        self.start_socket.edge = self
-        if self.end_socket is not None:
-            self.end_socket.edge = self
-
-        self.grEdge = QDMGraphicsEdgeDirect(self) if edge_type == EDGE_TYPE_DIRECT else QDMGraphicsEdgeBasier(self)
-        self.updatePositions()
-        self.scene.grScene.addItem(self.grEdge)
         self.scene.addEdge(self)
+
+
+    @property
+    def end_socket(self):
+        '''
+        :return:
+        '''
+        return self._end_socket
+
+    @end_socket.setter
+    def end_socket(self, value):
+        '''
+        :param value:
+        :return:
+        '''
+        self._end_socket = value
+        if self._end_socket is not None:
+            self._end_socket.edge = self
+
+
+
+    @property
+    def start_socket(self):
+        '''
+        :return:
+        '''
+        return self._start_socket
+
+    @start_socket.setter
+    def start_socket(self, value):
+        '''
+        :param value:
+        :return:
+        '''
+        self._start_socket = value
+        if self._start_socket is not None:
+            self._start_socket.edge = self
+
+    @property
+    def edge_type(self):
+        '''
+        :return:
+        '''
+        return self._edge_type
+
+    @edge_type.setter
+    def edge_type(self, value):
+        '''
+
+        :param value:
+        :return:
+        '''
+        if hasattr(self, 'grEdge') and self.grEdge is not None:
+            self.scene.grScene.removeItem(self.grEdge)
+
+        self._edge_type = value
+        if self._edge_type == EDGE_TYPE_DIRECT:
+            self.grEdge = QDMGraphicsEdgeDirect(self)
+        elif self._edge_type == EDGE_TYPE_BEZIER:
+            self.grEdge = QDMGraphicsEdgeBasier(self)
+        else:
+            self.grEdge = QDMGraphicsEdgeBasier(self)
+
+        self.scene.grScene.addItem(self.grEdge)
+        if self.start_socket is not None:
+            self.updatePositions()
 
 
     def updatePositions(self):
@@ -95,7 +154,6 @@ class Edge(Serializable):
 
         :return:
         '''
-        print('serialize: ', self)
         dic_val = OrderedDict()
         dic_val['id'] = self.id
         dic_val['type'] = self.edge_type
@@ -110,5 +168,10 @@ class Edge(Serializable):
         :param hashmap:
         :return:
         '''
-        print('deserialize: ', data)
-        return False
+
+        self.id = data['id']
+        self.start_socket = hashmap[data['start']]
+        self.end_socket = hashmap[data['end']] if data['end'] is not None else None
+        self.edge_type = data['type']
+
+        return True

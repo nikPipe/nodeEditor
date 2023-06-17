@@ -27,12 +27,10 @@ class Node(Serializable):
         self.content = QDMNodeContentWidget(self)
         self.grNode = QDmGraphicsNode(self)
 
-
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
 
         self.socket_spacing = 22
-
 
         # create socket for inputs and outputs
         self.inputs = []
@@ -103,21 +101,15 @@ class Node(Serializable):
 
         :return:
         '''
-        print ("Removing Node", self)
-        print (" - remove all edges from sockets")
         for socket in (self.inputs + self.outputs):
             if socket.hasEdge():
                 socket.edge.remove()
 
-        print(" - remove all edges from scene")
         self.scene.grScene.update()
 
-        print(" - remove all grNodes from scene")
         self.scene.grScene.removeItem(self.grNode)
         self.grNode = None
 
-        print (" - remove all sockets from scene")
-        print (" - remove node from scene")
         self.scene.removeNode(self)
 
 
@@ -144,7 +136,33 @@ class Node(Serializable):
         :param hashmap:
         :return:
         '''
-        print('deserialize: ', data)
-        return False
+        self.id = data['id']
+        hashmap[data['id']] = self
+
+        self.title = data['title']
+        self.grNode.title = self.title
+        self.grNode.setPos(data['pos_x'], data['pos_y'])
+        data['inputs'].sort(key=lambda socket: socket['index'] + socket['position'] * 10000)
+        data['outputs'].sort(key=lambda socket: socket['index'] + socket['position'] * 10000)
+
+        self.inputs = []
+        for socket_data in data['inputs']:
+            new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'], socket_type=socket_data['socket_type'])
+            new_socket.deserialize(socket_data, hashmap)
+            self.inputs.append(new_socket)
+
+        self.outputs = []
+        for socket_data in data['outputs']:
+            new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'], socket_type=socket_data['socket_type'])
+            new_socket.deserialize(socket_data, hashmap)
+            self.outputs.append(new_socket)
+
+
+
+
+
+
+
+        return True
 
 

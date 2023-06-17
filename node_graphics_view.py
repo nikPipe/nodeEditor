@@ -6,10 +6,14 @@ from nodeEditor.node_graphics_scene import QDMGraphicScene
 from nodeEditor.node_graphics_socket import QDMGraphicsSocket
 from nodeEditor.node_graphics_edge import QDMGraphicsEdge
 from nodeEditor.node_edge import *
+from nodeEditor.node_graphic_cutline import QDMCutLine
+
 
 
 MODE_NOOP = 1
 MODE_EDGE_DRAG = 2
+MODE_EDGE_CUT = 3
+
 EDGE_DRAG_START_THRESHOLD = 10
 
 class QDMGraphicsView(QGraphicsView):
@@ -29,6 +33,9 @@ class QDMGraphicsView(QGraphicsView):
         self.zoomStep = 1
         self.zoomRange = [0, 10]
         self.editingFlag = False
+
+        self.cut_line = QDMCutLine()
+        self.grScene.addItem(self.cut_line)
 
     def initUI(self):
         '''
@@ -116,6 +123,19 @@ class QDMGraphicsView(QGraphicsView):
         if self.mode == MODE_EDGE_DRAG:
             res = self.edgeDragEnd(item)
             if res: return
+
+        if item is None:
+            if event.modifiers() & Qt.ControlModifier:
+                self.mode = MODE_EDGE_CUT
+                fakeEvent = QMouseEvent(QEvent.MouseButtonRelease, event.localPos(), event.screenPos(),
+                                        Qt.LeftButton, Qt.NoButton, event.modifiers())
+                super().mouseReleaseEvent(fakeEvent)
+                QApplication.setOverrideCursor(Qt.CrossCursor)
+                return
+
+
+
+
 
         super().mousePressEvent(event)
 
@@ -243,6 +263,17 @@ class QDMGraphicsView(QGraphicsView):
                     res = self.edgeDragEnd(item)
                     if res: return
 
+
+        if self.mode == MODE_EDGE_CUT:
+
+            self.cutIntersectingEdges()
+            self.cut_line.line_points = []
+            self.cut_line.update()
+            QApplication.setOverrideCursor(Qt.ArrowCursor)
+            self.mode = MODE_NOOP
+
+            return
+
         super().mouseReleaseEvent(event)
 
     def rightMouseButtonRelease(self, event):
@@ -254,6 +285,20 @@ class QDMGraphicsView(QGraphicsView):
         super().mouseReleaseEvent(event)
 
 
+    def cutIntersectingEdges(self):
+        '''
+
+        :param item:
+        :return:
+        '''
+
+        for idx in range(len(self.cut_line.line_points) - 1):
+            p1 = self.cut_line.line_points[idx]
+            p2 = self.cut_line.line_points[idx + 1]
+
+            for edge in self.grScene.scene.edges:
+                if edge.grEdge.intersectsWith(p1, p2):
+                    edge.remove()
 
 
     def wheelEvent(self, event):
@@ -306,6 +351,11 @@ class QDMGraphicsView(QGraphicsView):
             self.dragging_edge.grEdge.setDestination(pos.x(), pos.y())
             self.dragging_edge.grEdge.update()
 
+        if self.mode == MODE_EDGE_CUT:
+            pos = self.mapToScene(event.pos())
+            self.cut_line.line_points.append(pos)
+            self.cut_line.update()
+
         super().mouseMoveEvent(event)
 
     def keyPressEvent(self, event):
@@ -319,7 +369,6 @@ class QDMGraphicsView(QGraphicsView):
                 self.deleteSelected()
             else:
                 super().keyPressEvent(event)
-
         else:
             super().keyPressEvent(event)
 

@@ -56,7 +56,7 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         :param widget:
         :return:
         '''
-        self.updatePath()
+        self.setPath(self.calcPath())
 
         if self.edge.end_socket is None:
             painter.setPen(self._pen_dragging)
@@ -72,24 +72,36 @@ class QDMGraphicsEdge(QGraphicsPathItem):
 
 
 
-    def updatePath(self):
+    def calcPath(self):
         '''
         will handle drawing QPainterPath from Point A to B
         :return:
         '''
         raise NotImplemented("This method has to be overriden in a child class")
 
+    def intersectsWith(self, p1, p2):
+        '''
+
+        :param p1:
+        :param p2:
+        :return:
+        '''
+        cutpath = QPainterPath(p1)
+        cutpath.lineTo(p2)
+        path = self.calcPath()
+        return cutpath.intersects(path)
+
 
 class QDMGraphicsEdgeDirect(QDMGraphicsEdge):
-    def updatePath(self):
+    def calcPath(self):
         path = QPainterPath(QPointF(self.posSource[0], self.posSource[1]))
         path.lineTo(self.posDestination[0], self.posDestination[1])
-        self.setPath(path)
+        return path
 
 
 
 class QDMGraphicsEdgeBasier(QDMGraphicsEdge):
-    def updatePath(self):
+    def calcPath(self):
         s = self.posSource
         d = self.posDestination
         dist = (d[0] - s[0]) * 0.5
@@ -118,9 +130,6 @@ class QDMGraphicsEdgeBasier(QDMGraphicsEdge):
                     )
                     ) * EDGE_CP_ROUNDNESS
 
-
-
-
         path = QPainterPath(QPointF(self.posSource[0], self.posSource[1]))
 
         path.cubicTo(
@@ -129,15 +138,7 @@ class QDMGraphicsEdgeBasier(QDMGraphicsEdge):
             self.posDestination[0], self.posDestination[1],
         )
 
-
-        '''
-        path.cubicTo(
-            s[0] + dist, s[1],
-            d[0] - dist, d[1],
-            self.posDestination[0], self.posDestination[1],
-        )
-        '''
-        self.setPath(path)
+        return path
 
 
 

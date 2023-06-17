@@ -22,7 +22,7 @@ class Node():
         self.scene = scene
         self.title = title
 
-        self.content = QDMNodeContentWidget()
+        self.content = QDMNodeContentWidget(self)
         self.grNode = QDmGraphicsNode(self)
 
 
@@ -89,11 +89,33 @@ class Node():
         for socket in self.inputs + self.outputs:
             if socket.hasEdge():
                 socket.edge.updatePositions()
-
-
     def __str__(self):
         '''
 
         :return:
         '''
         return "<%s %s..%s>" % (self.__class__.__name__, hex(id(self))[2:5], hex(id(self))[-3:])
+
+    def remove(self):
+        '''
+
+        :return:
+        '''
+        print ("Removing Node", self)
+        print (" - remove all edges from sockets")
+        for socket in (self.inputs + self.outputs):
+            if socket.hasEdge():
+                socket.edge.remove()
+
+        print(" - remove all edges from scene")
+        self.scene.grScene.update()
+
+        print(" - remove all grNodes from scene")
+        self.scene.grScene.removeItem(self.grNode)
+        self.grNode = None
+
+        print (" - remove all sockets from scene")
+        print (" - remove node from scene")
+        self.scene.removeNode(self)
+
+

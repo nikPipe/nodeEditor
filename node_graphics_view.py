@@ -28,6 +28,7 @@ class QDMGraphicsView(QGraphicsView):
         self.zoom = 10
         self.zoomStep = 1
         self.zoomRange = [0, 10]
+        self.editingFlag = False
 
     def initUI(self):
         '''
@@ -177,23 +178,26 @@ class QDMGraphicsView(QGraphicsView):
         self.mode = MODE_NOOP
         print('End dragging edge')
         if type(item) is QDMGraphicsSocket:
-            print('  previous Edge: ', self.prev_edge)
-            if item.socket.hasEdge():
-                item.socket.edge.remove()
+            if item.socket != self.last_start_socket:
 
-            print('  Assign end Socket ', item.socket)
-            if self.prev_edge is not None:
-                self.prev_edge.remove()
+                print('  previous Edge: ', self.prev_edge)
+                if item.socket.hasEdge():
+                    item.socket.edge.remove()
 
-            self.dragging_edge.start_socket = self.last_start_socket
-            self.dragging_edge.end_socket = item.socket
-            self.dragging_edge.start_socket.setConnectedEdge(self.dragging_edge)
-            self.dragging_edge.end_socket.setConnectedEdge(self.dragging_edge)
-            self.dragging_edge.updatePositions()
+                print('  Assign end Socket ', item.socket)
+                if self.prev_edge is not None:
+                    self.prev_edge.remove()
 
-            print('  Created: ', self.dragging_edge)
+                self.dragging_edge.start_socket = self.last_start_socket
+                self.dragging_edge.end_socket = item.socket
+                self.dragging_edge.start_socket.setConnectedEdge(self.dragging_edge)
+                self.dragging_edge.end_socket.setConnectedEdge(self.dragging_edge)
 
-            return True
+                self.dragging_edge.updatePositions()
+
+                print('  Created: ', self.dragging_edge)
+
+                return True
 
         self.dragging_edge.remove()
         self.dragging_edge = None
@@ -302,7 +306,44 @@ class QDMGraphicsView(QGraphicsView):
             self.dragging_edge.grEdge.setDestination(pos.x(), pos.y())
             self.dragging_edge.grEdge.update()
 
-
-
         super().mouseMoveEvent(event)
+
+    def keyPressEvent(self, event):
+        '''
+
+        :param event:
+        :return:
+        '''
+        if event.key() == Qt.Key_Delete:
+            if not self.editingFlag:
+                self.deleteSelected()
+            else:
+                super().keyPressEvent(event)
+
+        else:
+            super().keyPressEvent(event)
+
+    def deleteSelected(self):
+        '''
+
+        :return:
+        '''
+        for item in self.grScene.selectedItems():
+            if isinstance(item, QDMGraphicsEdge):
+                item.edge.remove()
+            elif hasattr(item, 'node'):
+                item.node.remove()
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -72,7 +72,9 @@ class Edge():
         self.remove_from_socket()
         self.scene.grScene.removeItem(self.grEdge)
         self.grEdge = None
-        self.scene.removeEdge(self)
+        try:
+            self.scene.removeEdge(self)
+        except: pass
 
     def __str__(self):
         '''

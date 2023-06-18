@@ -10,6 +10,7 @@ from nodeEditor.node_graphic_cutline import QDMCutLine
 
 
 
+
 MODE_NOOP = 1
 MODE_EDGE_DRAG = 2
 MODE_EDGE_CUT = 3
@@ -375,6 +376,29 @@ class QDMGraphicsView(QGraphicsView):
 
         elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
             self.grScene.scene.loadFromFile('graph.json')
+
+
+        elif event.key() == Qt.Key_1:
+            self.grScene.scene.history.storeHistory('A')
+
+        elif event.key() == Qt.Key_2:
+            self.grScene.scene.history.storeHistory('B')
+
+        elif event.key() == Qt.Key_3:
+            self.grScene.scene.history.storeHistory('C')
+
+        elif event.key() == Qt.Key_4:
+            self.grScene.scene.history.undo()
+
+        elif event.key() == Qt.Key_5:
+            self.grScene.scene.history.redo()
+
+        elif event.key() == Qt.Key_H:
+            print('Key H pressed')
+
+            print("HISTORY:     len(%d)" % len(self.grScene.scene.history.history_stake),
+                  '-- current_step: %d' % self.grScene.scene.history.history_current_step)
+            print(self.grScene.scene.history.history_stake)
 
         else:
             super().keyPressEvent(event)

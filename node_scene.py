@@ -6,6 +6,7 @@ from collections import OrderedDict
 from nodeEditor.node_sertializable import Serializable
 from nodeEditor.node_node import Node
 from nodeEditor.node_edge import Edge
+from nodeEditor.node_scene_history import SceneHistory
 
 
 class Scene(Serializable):
@@ -22,6 +23,8 @@ class Scene(Serializable):
         self.edges = []
 
         self.scene_width, self.scene_height = 64000, 64000
+        self.history = SceneHistory(self)
+
 
         self.initUI()
 

@@ -30,7 +30,6 @@ class QDMGraphicScene(QGraphicsScene):
         self._pen_dark = QPen(self._color_dark)
         self._pen_dark.setWidth(2)
 
-
         self.setBackgroundBrush(self._color_background)
 
 
@@ -80,6 +79,7 @@ class QDMGraphicScene(QGraphicsScene):
 
         painter.setPen(self._pen_dark)
         painter.drawLines(lines_dark)
+
 
 
 

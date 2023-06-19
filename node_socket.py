@@ -79,15 +79,15 @@ class Socket(Serializable):
 
         return dic_val
 
-    def deserialize(self, data, hashmap={}):
+    def deserialize(self, data, hashmap={}, restore_id=True):
         '''
 
         :param data:
         :param hashmap:
         :return:
         '''
-
-        self.id = data['id']
+        if restore_id:
+            self.id = data['id']
         hashmap[data['id']] = self
 
 

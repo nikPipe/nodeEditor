@@ -7,6 +7,7 @@ from nodeEditor.node_sertializable import Serializable
 from nodeEditor.node_node import Node
 from nodeEditor.node_edge import Edge
 from nodeEditor.node_scene_history import SceneHistory
+from nodeEditor.node_scene_clipboard import SceneClipboard
 
 
 class Scene(Serializable):
@@ -24,6 +25,7 @@ class Scene(Serializable):
 
         self.scene_width, self.scene_height = 64000, 64000
         self.history = SceneHistory(self)
+        self.clipboard = SceneClipboard(self)
 
 
         self.initUI()
@@ -124,7 +126,7 @@ class Scene(Serializable):
         dic_val['edges'] = edges
         return dic_val
 
-    def deserialize(self, data, hashmap={}):
+    def deserialize(self, data, hashmap={}, restore_id=True):
         '''
 
         :param data:
@@ -132,15 +134,18 @@ class Scene(Serializable):
         :return:
         '''
         self.clear()
-
         hashmap = {}
+
+        if restore_id: self.id = data['id']
+
+
         #CREATE NODES
         for node_data in data['nodes']:
-            Node(self).deserialize(node_data, hashmap)
+            Node(self).deserialize(node_data, hashmap, restore_id)
 
         #CREATE EDGES
         for edge_data in data['edges']:
-            Edge(self).deserialize(edge_data, hashmap)
+            Edge(self).deserialize(edge_data, hashmap, restore_id)
 
         return True
 

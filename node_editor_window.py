@@ -8,6 +8,9 @@ class NdeEditorWindow(QMainWindow):
 
         self.initUI()
 
+
+
+
     def initUI(self):
         '''
 
@@ -27,6 +30,10 @@ class NdeEditorWindow(QMainWindow):
         redoAction = self.action_def(name='Redo', shortcut='Ctrl+Shift+Z', statusTip='Redo', toolTip='Redo', connect=self.redoFile )
         deleteAction = self.action_def(name='Delete', shortcut='Del', statusTip='Delete', toolTip='Delete', connect=self.deleteFile )
 
+        cutAction = self.action_def(name='Cut', shortcut='Ctrl+X', statusTip='Cut', toolTip='Cut', connect=self.cutFile)
+        copyAction = self.action_def(name='Copy', shortcut='Ctrl+C', statusTip='Copy', toolTip='Copy', connect=self.copyFile)
+        pasteAction = self.action_def(name='Paste', shortcut='Ctrl+V', statusTip='Paste', toolTip='Paste', connect=self.pasteFile)
+
         fileMenu = menubar.addMenu('&File')
         editMenu = menubar.addMenu('&Edit')
         helpMenu = menubar.addMenu('&Help')
@@ -43,6 +50,10 @@ class NdeEditorWindow(QMainWindow):
         #EDIT MENU
         editMenu.addAction(undoAction)
         editMenu.addAction(redoAction)
+        editMenu.addSeparator()
+        editMenu.addAction(cutAction)
+        editMenu.addAction(copyAction)
+        editMenu.addAction(pasteAction)
         editMenu.addSeparator()
         editMenu.addAction(deleteAction)
 
@@ -139,3 +150,28 @@ class NdeEditorWindow(QMainWindow):
         :return:
         '''
         self.statusMousePos.setText('Scene Pos: %d, %d' % (x, y))
+
+    def cutFile(self):
+        '''
+
+        :return:
+        '''
+
+        data = self.nodeEditorWidget.Cut_def()
+        QApplication.instance().clipboard().setText(data)
+
+    def copyFile(self):
+        '''
+
+        :return:
+        '''
+        data = self.nodeEditorWidget.Copy_def()
+        QApplication.instance().clipboard().setText(data)
+
+    def pasteFile(self):
+        '''
+
+        :return:
+        '''
+        raw_data = QApplication.instance().clipboard().text()
+        self.nodeEditorWidget.Paste_def(raw_data)

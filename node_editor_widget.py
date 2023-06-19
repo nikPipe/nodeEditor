@@ -1,3 +1,4 @@
+import json
 import os
 
 from PyQt.import_module import *
@@ -142,6 +143,42 @@ class NodeEditorWidget(QWidget):
             return
         self.scene.saveToFile(fname)
         return fname
+
+    def Cut_def(self):
+        '''
+
+        :return:
+        '''
+        data = self.scene.clipboard.serializeSelected(delete=True)
+        str_data = json.dumps(data, indent=4)
+        return str_data
+
+    def Copy_def(self):
+        '''
+
+        :return:
+        '''
+        data = self.scene.clipboard.serializeSelected(delete=False)
+        str_data = json.dumps(data, indent=4)
+        return str_data
+
+    def Paste_def(self, data):
+        '''
+
+        :return:
+        '''
+        try:
+            json_data = json.loads(data)
+        except ValueError as e:
+            print("Paste Error: %s" % e)
+            return
+
+        #CHECK IF CLIPBOARD DATA IS VALID
+        if 'nodes' not in json_data:
+            print("Clipboard has no 'nodes' data")
+            return
+
+        self.scene.clipboard.deserializeFromClipboard(json_data)
 
 
 

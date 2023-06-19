@@ -161,7 +161,7 @@ class Edge(Serializable):
         dic_val['end'] = self.end_socket.id if self.end_socket is not None else None
         return dic_val
 
-    def deserialize(self, data, hashmap={}):
+    def deserialize(self, data, hashmap={}, restore_id=True):
         '''
 
         :param data:
@@ -169,7 +169,7 @@ class Edge(Serializable):
         :return:
         '''
 
-        self.id = data['id']
+        if restore_id: self.id = data['id']
         self.start_socket = hashmap[data['start']]
         self.end_socket = hashmap[data['end']] if data['end'] is not None else None
         self.edge_type = data['type']

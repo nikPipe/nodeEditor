@@ -1,3 +1,5 @@
+import os
+
 from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_graphics_view import QDMGraphicsView
@@ -6,9 +8,9 @@ from nodeEditor.node_node import Node
 from nodeEditor.node_edge import *
 
 
-class NodeEditorWnd(QWidget):
+class NodeEditorWidget(QWidget):
     def __init__(self, parent=None):
-        super(NodeEditorWnd, self).__init__(parent)
+        super(NodeEditorWidget, self).__init__(parent)
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
@@ -22,27 +24,20 @@ class NodeEditorWnd(QWidget):
 
         :return:
         '''
-        self.setGeometry(300, 300, 800, 600)
         self.layout = self.sample_widget_template.vertical_layout(parent_self=self)
         self.setLayout(self.layout)
 
         # CREATE GRAPHICS SCENE
         self.scene = Scene()
 
-
-
-
         self.addNodes()
-
-
 
         #CREATE GRAPHICS VIEW
         self.view = QDMGraphicsView(self.scene.grScene, self)
+        self.setGeometry(300, 300, 800, 600)
         self.layout.addWidget(self.view)
 
         self.setWindowTitle('Node Editor')
-
-        self.show()
 
         #self.addDebugContent()
 
@@ -108,7 +103,45 @@ class NodeEditorWnd(QWidget):
 
 
 
+    def New_def(self):
+        '''
 
+        :return:
+        '''
+        self.scene.clear()
+
+    def Open_def(self):
+        '''
+
+        :return:
+        '''
+        fname, filter = QFileDialog.getOpenFileName(self, 'Open file New')
+        if fname == '':
+            return
+        if os.path.isfile(fname):
+            self.scene.loadFromFile(fname)
+
+    def Save_def(self):
+        '''
+
+        :return:
+        '''
+        fname, filter = QFileDialog.getSaveFileName(self, 'Save file New', filter='*.json')
+        if fname == '':
+            return
+        self.scene.saveToFile(fname)
+        return fname
+
+    def SaveAs_def(self):
+        '''
+
+        :return:
+        '''
+        fname, filter = QFileDialog.getSaveFileName(self, 'Save file New', filter='*.json')
+        if fname == '':
+            return
+        self.scene.saveToFile(fname)
+        return fname
 
 
 

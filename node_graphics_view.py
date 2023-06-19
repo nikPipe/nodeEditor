@@ -9,8 +9,6 @@ from nodeEditor.node_edge import *
 from nodeEditor.node_graphic_cutline import QDMCutLine
 
 
-
-
 MODE_NOOP = 1
 MODE_EDGE_DRAG = 2
 MODE_EDGE_CUT = 3
@@ -18,6 +16,9 @@ MODE_EDGE_CUT = 3
 EDGE_DRAG_START_THRESHOLD = 10
 
 class QDMGraphicsView(QGraphicsView):
+    scenePosChanged = pyqtSignal(int, int)
+
+
     def __init__(self, grScene, parent=None):
         super().__init__(parent)
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
@@ -278,7 +279,6 @@ class QDMGraphicsView(QGraphicsView):
             return
 
         if self.dragMode() == QGraphicsView.RubberBandDrag:
-            print('Selection:', [item for item in self.grScene.selectedItems()])
             self.grScene.scene.history.storeHistory('Selection changed')
 
         super().mouseReleaseEvent(event)
@@ -364,6 +364,11 @@ class QDMGraphicsView(QGraphicsView):
             self.cut_line.line_points.append(pos)
             self.cut_line.update()
 
+
+        self.last_scene_mouse_position = self.mapToScene(event.pos())
+
+        self.scenePosChanged.emit(int(self.last_scene_mouse_position.x()), int(self.last_scene_mouse_position.y()))
+
         super().mouseMoveEvent(event)
 
     def keyPressEvent(self, event):
@@ -377,18 +382,18 @@ class QDMGraphicsView(QGraphicsView):
                 self.deleteSelected()
             else:
                 super().keyPressEvent(event)
-        elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
-            print('Ctrl + S pressed')
-            self.grScene.scene.saveToFile('graph.json')
+        #elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
+        #    print('Ctrl + S pressed')
+        #    self.grScene.scene.saveToFile('graph.json')
 
-        elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
-            self.grScene.scene.loadFromFile('graph.json')
+        #elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
+        #    self.grScene.scene.loadFromFile('graph.json')
 
-        elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ControlModifier:
-            self.grScene.scene.history.undo()
+        #elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ControlModifier:
+        #    self.grScene.scene.history.undo()
 
-        elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ShiftModifier:
-            self.grScene.scene.history.redo()
+        #elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ShiftModifier:
+        #    self.grScene.scene.history.redo()
 
         elif event.key() == Qt.Key_H:
             print('Key H pressed')
@@ -413,7 +418,6 @@ class QDMGraphicsView(QGraphicsView):
                 item.node.remove()
 
         self.grScene.scene.history.storeHistory('Delete selected')
-
 
 
 

@@ -101,6 +101,8 @@ class Scene(Serializable):
             data = json.loads(raw_data)
             self.deserialize(data)
 
+
+
     def serialize(self):
         '''
 
@@ -108,14 +110,11 @@ class Scene(Serializable):
         '''
         nodes = []
         edges = []
-        print('serialize: ', self.nodes)
         for node in self.nodes:
             nodes.append(node.serialize())
 
-        print('serialize: ', self.edges)
         for edge in self.edges:
             edges.append(edge.serialize())
-        print('serialize all: ', nodes, edges)
 
         dic_val = OrderedDict()
         dic_val['id'] = self.id

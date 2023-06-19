@@ -175,7 +175,7 @@ class QDMGraphicsView(QGraphicsView):
         fake_event = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
                                     Qt.LeftButton, event.buttons() & ~Qt.LeftButton, event.modifiers())
         super().mouseReleaseEvent(fake_event)
-        self.setDragMode(QGraphicsView.NoDrag)
+        self.setDragMode(QGraphicsView.RubberBandDrag)
 
     def edgeDragStart(self, item):
         '''

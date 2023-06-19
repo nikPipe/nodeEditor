@@ -127,6 +127,7 @@ class QDMGraphicsView(QGraphicsView):
             if res: return
 
         if item is None:
+            print('this is running 1')
             if event.modifiers() & Qt.ControlModifier:
                 self.mode = MODE_EDGE_CUT
                 fakeEvent = QMouseEvent(QEvent.MouseButtonRelease, event.localPos(), event.screenPos(),
@@ -134,9 +135,6 @@ class QDMGraphicsView(QGraphicsView):
                 super().mouseReleaseEvent(fakeEvent)
                 QApplication.setOverrideCursor(Qt.CrossCursor)
                 return
-
-
-
 
 
         super().mousePressEvent(event)
@@ -223,12 +221,9 @@ class QDMGraphicsView(QGraphicsView):
 
         self.dragging_edge.remove()
         self.dragging_edge = None
-
         if self.prev_edge is not None:
             self.prev_edge.start_socket.edge = self.prev_edge
-
-        self.scene.grScene.history.storeHistory('Created new edge by dragging')
-
+        self.grScene.scene.history.storeHistory('Created new edge by dragging')
 
         return False
 

@@ -23,7 +23,25 @@ class QDMCutLine(QGraphicsItem):
 
         :return:
         '''
-        return QRectF(0, 0, 1, 1)
+        return self.shape().boundingRect()
+
+
+    def shape(self):
+        '''
+
+        :return:
+        '''
+        poly = QPolygonF(self.line_points)
+
+        if len(self.line_points) > 1:
+            path = QPainterPath(self.line_points[0])
+            for pt in self.line_points[1:]:
+                path.lineTo(pt)
+        else:
+            path = QPainterPath(QPointF(0, 0))
+            path.lineTo(QPointF(1, 1))
+
+        return path
 
     def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
         '''

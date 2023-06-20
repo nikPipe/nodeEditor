@@ -105,6 +105,8 @@ class QDmGraphicsNode(QGraphicsItem):
             if node.grNode.isSelected():
                 node.updateConnectedEdges()
 
+                self.node.scene.hasBeenModified = True
+
 
         self.wasMoved = True
 

@@ -16,7 +16,7 @@ class NodeEditorWidget(QWidget):
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
 
-
+        self.parent_self = parent
         self.initUI()
 
 
@@ -29,16 +29,17 @@ class NodeEditorWidget(QWidget):
         self.setLayout(self.layout)
 
         # CREATE GRAPHICS SCENE
-        self.scene = Scene()
+        self.scene = Scene(self)
 
         self.addNodes()
+        self.filename = None
 
         #CREATE GRAPHICS VIEW
         self.view = QDMGraphicsView(self.scene.grScene, self)
         self.setGeometry(300, 300, 800, 600)
         self.layout.addWidget(self.view)
 
-        self.setWindowTitle('Node Editor')
+        self.changeTitle(self)
 
         #self.addDebugContent()
 
@@ -101,26 +102,32 @@ class NodeEditorWidget(QWidget):
         line.setFlag(QGraphicsItem.ItemIsMovable)
         line.setFlag(QGraphicsItem.ItemIsSelectable)
 
-
-
-
     def New_def(self):
         '''
 
         :return:
         '''
-        self.scene.clear()
+        if self.maybeSave():
+            self.scene.clear()
+            self.filename = None
+            return True
+        return False
 
     def Open_def(self):
         '''
 
         :return:
         '''
-        fname, filter = QFileDialog.getOpenFileName(self, 'Open file New')
-        if fname == '':
-            return
-        if os.path.isfile(fname):
-            self.scene.loadFromFile(fname)
+        if self.maybeSave():
+            fname, filter = QFileDialog.getOpenFileName(self, 'Open file New')
+            if fname == '':
+                return
+
+            if os.path.isfile(fname):
+                self.scene.loadFromFile(fname)
+                self.filename = fname
+                print("Loaded", fname)
+                self.changeTitle(self)
 
     def Save_def(self):
         '''
@@ -131,6 +138,7 @@ class NodeEditorWidget(QWidget):
         if fname == '':
             return
         self.scene.saveToFile(fname)
+        self.filename = fname
         return fname
 
     def SaveAs_def(self):
@@ -140,9 +148,10 @@ class NodeEditorWidget(QWidget):
         '''
         fname, filter = QFileDialog.getSaveFileName(self, 'Save file New', filter='*.json')
         if fname == '':
-            return
+            return False
         self.scene.saveToFile(fname)
-        return fname
+        self.filename = fname
+        return True
 
     def Cut_def(self):
         '''
@@ -180,17 +189,71 @@ class NodeEditorWidget(QWidget):
 
         self.scene.clipboard.deserializeFromClipboard(json_data)
 
+    def isModified(self):
+        '''
+
+        :return:
+        '''
+        return self.scene.hasBeenModified
+
+    def maybeSave(self):
+        '''
+
+        :return:
+        '''
+        if not self.isModified():
+            return
+
+        res = QMessageBox.warning(self, 'Warning', 'Scene Modified. Save Changes?', QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        if res == QMessageBox.Yes:
+            return self.SaveAs_def()
+
+        elif res == QMessageBox.Cancel:
+            return False
+
+        return True
+
+    def changeTitle(self, object=None):
+        '''
+
+        :return:
+        '''
+        title = 'Node Editor - '
+        if self.filename is None:
+            title += 'Untitled'
+
+        else:
+            title += os.path.basename(self.filename)
+
+        if self.isModified():
+            title += '*'
+
+        if self.parent_self is None:
+            object.setWindowTitle(title)
+        else:
+            self.parent_self.setWindowTitle(title)
 
 
+    def undo(self):
+        '''
 
+        :return:
+        '''
+        self.scene.history.undo()
 
+    def redo(self):
+        '''
 
+        :return:
+        '''
+        self.scene.history.redo()
 
+    def delete_def(self):
+        '''
 
-
-
-
-
+        :return:
+        '''
+        self.scene.grScene.views()[0].deleteSelected()
 
 
 

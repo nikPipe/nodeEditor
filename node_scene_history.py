@@ -38,6 +38,9 @@ class SceneHistory():
         self.history_stake.append(hs)
         self.history_current_step += 1
 
+        self.scene.hasBeenModified = True
+        self.scene.parentSelf.changeTitle()
+
 
     def createHistoryStamp(self, desc):
         sel_obj = {

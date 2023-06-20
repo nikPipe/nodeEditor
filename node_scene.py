@@ -11,7 +11,7 @@ from nodeEditor.node_scene_clipboard import SceneClipboard
 
 
 class Scene(Serializable):
-    def __init__(self):
+    def __init__(self, parentSelf=None):
         '''
 
         '''
@@ -19,9 +19,13 @@ class Scene(Serializable):
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
+        self.parentSelf = parentSelf
 
         self.nodes = []
         self.edges = []
+
+        self._hasbeenModified = False
+        self._hasbeenModified_listners = []
 
         self.scene_width, self.scene_height = 64000, 64000
         self.history = SceneHistory(self)
@@ -29,6 +33,26 @@ class Scene(Serializable):
 
 
         self.initUI()
+
+
+    @property
+    def hasBeenModified(self):
+        return self._hasbeenModified
+
+    @hasBeenModified.setter
+    def hasBeenModified(self, value):
+        if not self._hasbeenModified and value:
+            self._hasbeenModified = value
+
+            #call all the listners
+            for callback in self._hasbeenModified_listners:
+                callback()
+
+        self._hasbeenModified = value
+
+    def addHasBeenModifiedListner(self, callback):
+        self._hasbeenModified_listners.append(callback)
+
 
     def initUI(self):
         '''
@@ -79,6 +103,8 @@ class Scene(Serializable):
         while len(self.nodes) > 0:
             self.nodes[0].remove()
 
+        self.hasBeenModified = False
+
     def saveToFile(self, filename):
         '''
 
@@ -88,8 +114,9 @@ class Scene(Serializable):
         print('saveToFile: ', filename)
         with open(filename, 'w') as file:
             file.write(json.dumps(self.serialize(), indent=4))
+            print('saveJson: ', filename)
 
-        print('saveJson: ', filename)
+            self.hasBeenModified = False
 
 
     def loadFromFile(self, filename):
@@ -102,6 +129,7 @@ class Scene(Serializable):
             raw_data = file.read()
             data = json.loads(raw_data)
             self.deserialize(data)
+            self.hasBeenModified = False
 
 
 

@@ -303,7 +303,6 @@ class QDMGraphicsView(QGraphicsView):
 
         self.grScene.scene.history.storeHistory('Delete cutted edges')
 
-
     def wheelEvent(self, event):
         '''
 
@@ -363,6 +362,8 @@ class QDMGraphicsView(QGraphicsView):
         self.last_scene_mouse_position = self.mapToScene(event.pos())
 
         self.scenePosChanged.emit(int(self.last_scene_mouse_position.x()), int(self.last_scene_mouse_position.y()))
+
+
 
         super().mouseMoveEvent(event)
 

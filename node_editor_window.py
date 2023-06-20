@@ -8,9 +8,6 @@ class NdeEditorWindow(QMainWindow):
 
         self.initUI()
 
-
-
-
     def initUI(self):
         '''
 
@@ -62,7 +59,7 @@ class NdeEditorWindow(QMainWindow):
 
         #SET WINDOW PROPERTIES
         self.setGeometry(600, 300, 800, 600)
-        self.setWindowTitle('Node Editor')
+        self.nodeEditorWidget.changeTitle(self)
         #STATE BAR
         self.statusBar().showMessage('Ready')
         self.statusBar().setStyleSheet('background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);')
@@ -70,8 +67,17 @@ class NdeEditorWindow(QMainWindow):
         self.statusBar().addPermanentWidget(self.statusMousePos)
         self.nodeEditorWidget.view.scenePosChanged.connect(self.on_mouse_pos_change)
 
-
         self.show()
+
+    def closeEvent(self, event):
+        '''
+
+        :param event:
+        :return:
+        '''
+        if self.nodeEditorWidget.maybeSave():
+            event.accept()
+
 
     def action_def(self, name, shortcut, statusTip, toolTip, connect):
         '''
@@ -92,7 +98,7 @@ class NdeEditorWindow(QMainWindow):
         :return:
         '''
         print('New File')
-        self.nodeEditorWidget.New_def()
+        val = self.nodeEditorWidget.New_def()
 
 
     def openFile(self):
@@ -110,6 +116,7 @@ class NdeEditorWindow(QMainWindow):
         print('Save File')
         fileName = self.nodeEditorWidget.Save_def()
         self.statusBar().showMessage('File Saved %s' % fileName)
+        return True
 
     def saveAsFile(self):
         '''
@@ -118,7 +125,8 @@ class NdeEditorWindow(QMainWindow):
         '''
         print('Save As File')
         fileName = self.nodeEditorWidget.SaveAs_def()
-        self.statusBar().showMessage('File Saved As %s' % fileName)
+        self.statusBar().showMessage('File Saved As')
+        return fileName
 
     def undoFile(self):
         '''
@@ -126,14 +134,14 @@ class NdeEditorWindow(QMainWindow):
         :return:
         '''
         print('Undo File')
-        self.nodeEditorWidget.scene.history.undo()
+        self.nodeEditorWidget.undo()
 
     def redoFile(self):
         '''
 
         :return:
         '''
-        self.nodeEditorWidget.scene.history.redo()
+        self.nodeEditorWidget.redo()
 
     def deleteFile(self):
         '''
@@ -141,7 +149,7 @@ class NdeEditorWindow(QMainWindow):
         :return:
         '''
         print('Delete File')
-        self.nodeEditorWidget.scene.grScene.views()[0].deleteSelected()
+        self.nodeEditorWidget.delete_def()
 
     def on_mouse_pos_change(self, x, y):
 

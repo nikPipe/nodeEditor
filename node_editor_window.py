@@ -1,11 +1,19 @@
-
 from PyQt.import_module import *
+from PyQt import sample_widget_template, color_variable, styleSheet
 from nodeEditor.node_editor_widget import NodeEditorWidget
 
 class NdeEditorWindow(QMainWindow):
     def __init__(self):
-        super().__init__()
+        '''
 
+        :return:
+        '''
+        super(NdeEditorWindow, self).__init__()
+        self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
+        self.color_variable = color_variable.COLOR_VARIABLE()
+        self.styleSheet = styleSheet.STYLESHEET()
+        self.name_company = 'Nikheel'
+        self.name_product = 'Node Editor'
         self.initUI()
 
     def initUI(self):
@@ -13,46 +21,7 @@ class NdeEditorWindow(QMainWindow):
 
         :return:
         '''
-        #ADD MENUBAR
-        menubar = self.menuBar()
-
-        #FILE
-        fileAction = self.action_def(name='New', shortcut='Ctrl+N', statusTip='New File', toolTip='New File', connect=self.NewFile )
-        openAction = self.action_def(name='Open', shortcut='Ctrl+O', statusTip='Open File', toolTip='Open File', connect=self.openFile )
-        saveAction = self.action_def(name='Save', shortcut='Ctrl+S', statusTip='Save File', toolTip='Save File', connect=self.saveFile )
-        saveAsAction = self.action_def(name='Save As', shortcut='Ctrl+Shift+S', statusTip='Save File As', toolTip='Save File As', connect=self.saveAsFile )
-        exitAction = self.action_def(name='Exit', shortcut='Ctrl+Q', statusTip='Exit Application', toolTip='Exit Application', connect=QApplication.instance().quit)
-
-        undoAction = self.action_def(name='Undo', shortcut='Ctrl+Z', statusTip='Undo', toolTip='Undo', connect=self.undoFile )
-        redoAction = self.action_def(name='Redo', shortcut='Ctrl+Shift+Z', statusTip='Redo', toolTip='Redo', connect=self.redoFile )
-        deleteAction = self.action_def(name='Delete', shortcut='Del', statusTip='Delete', toolTip='Delete', connect=self.deleteFile )
-
-        cutAction = self.action_def(name='Cut', shortcut='Ctrl+X', statusTip='Cut', toolTip='Cut', connect=self.cutFile)
-        copyAction = self.action_def(name='Copy', shortcut='Ctrl+C', statusTip='Copy', toolTip='Copy', connect=self.copyFile)
-        pasteAction = self.action_def(name='Paste', shortcut='Ctrl+V', statusTip='Paste', toolTip='Paste', connect=self.pasteFile)
-
-        fileMenu = menubar.addMenu('&File')
-        editMenu = menubar.addMenu('&Edit')
-        helpMenu = menubar.addMenu('&Help')
-
-        #FILE MENU
-        fileMenu.addAction(fileAction)
-        fileMenu.addSeparator()
-        fileMenu.addAction(openAction)
-        fileMenu.addAction(saveAction)
-        fileMenu.addAction(saveAsAction)
-        fileMenu.addSeparator()
-        fileMenu.addAction(exitAction)
-
-        #EDIT MENU
-        editMenu.addAction(undoAction)
-        editMenu.addAction(redoAction)
-        editMenu.addSeparator()
-        editMenu.addAction(cutAction)
-        editMenu.addAction(copyAction)
-        editMenu.addAction(pasteAction)
-        editMenu.addSeparator()
-        editMenu.addAction(deleteAction)
+        self.createMenus()
 
         self.nodeEditorWidget = NodeEditorWidget(self)
         self.setCentralWidget(self.nodeEditorWidget)
@@ -61,10 +30,7 @@ class NdeEditorWindow(QMainWindow):
         self.setGeometry(600, 300, 800, 600)
         self.nodeEditorWidget.changeTitle(self)
         #STATE BAR
-        self.statusBar().showMessage('Ready')
-        self.statusBar().setStyleSheet('background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);')
-        self.statusMousePos = QLabel('')
-        self.statusBar().addPermanentWidget(self.statusMousePos)
+        self.createStatusBar()
         self.nodeEditorWidget.view.scenePosChanged.connect(self.on_mouse_pos_change)
 
         self.show()
@@ -91,6 +57,66 @@ class NdeEditorWindow(QMainWindow):
         action.setStatusTip(statusTip)
         action.setToolTip(toolTip)
         return action
+
+    def createActions(self):
+        '''
+
+        :return:
+        '''
+        self.fileAction = self.action_def(name='New', shortcut='Ctrl+N', statusTip='New File', toolTip='New File',
+                                     connect=self.NewFile)
+        self.openAction = self.action_def(name='Open', shortcut='Ctrl+O', statusTip='Open File', toolTip='Open File',
+                                     connect=self.openFile)
+        self.saveAction = self.action_def(name='Save', shortcut='Ctrl+S', statusTip='Save File', toolTip='Save File',
+                                     connect=self.saveFile)
+        self.saveAsAction = self.action_def(name='Save As', shortcut='Ctrl+Shift+S', statusTip='Save File As',
+                                       toolTip='Save File As', connect=self.saveAsFile)
+        self.exitAction = self.action_def(name='Exit', shortcut='Ctrl+Q', statusTip='Exit Application',
+                                     toolTip='Exit Application', connect=QApplication.instance().quit)
+
+        self.undoAction = self.action_def(name='Undo', shortcut='Ctrl+Z', statusTip='Undo', toolTip='Undo',
+                                     connect=self.undoFile)
+        self.redoAction = self.action_def(name='Redo', shortcut='Ctrl+Shift+Z', statusTip='Redo', toolTip='Redo',
+                                     connect=self.redoFile)
+        self.deleteAction = self.action_def(name='Delete', shortcut='Del', statusTip='Delete', toolTip='Delete',
+                                       connect=self.deleteFile)
+
+        self.cutAction = self.action_def(name='Cut', shortcut='Ctrl+X', statusTip='Cut', toolTip='Cut', connect=self.cutFile)
+        self.copyAction = self.action_def(name='Copy', shortcut='Ctrl+C', statusTip='Copy', toolTip='Copy',
+                                     connect=self.copyFile)
+        self.pasteAction = self.action_def(name='Paste', shortcut='Ctrl+V', statusTip='Paste', toolTip='Paste',
+                                      connect=self.pasteFile)
+
+
+    def createMenus(self):
+        '''
+
+        :return:
+        '''
+        menubar = self.menuBar()
+        self.fileMenu = menubar.addMenu('&File')
+        self.editMenu = menubar.addMenu('&Edit')
+
+        self.createActions()
+
+        # FILE MENU
+        self.fileMenu.addAction(self.fileAction)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction(self.openAction)
+        self.fileMenu.addAction(self.saveAction)
+        self.fileMenu.addAction(self.saveAsAction)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction(self.exitAction)
+
+        # EDIT MENU
+        self.editMenu.addAction(self.undoAction)
+        self.editMenu.addAction(self.redoAction)
+        self.editMenu.addSeparator()
+        self.editMenu.addAction(self.cutAction)
+        self.editMenu.addAction(self.copyAction)
+        self.editMenu.addAction(self.pasteAction)
+        self.editMenu.addSeparator()
+        self.editMenu.addAction(self.deleteAction)
 
     def NewFile(self):
         '''
@@ -183,3 +209,34 @@ class NdeEditorWindow(QMainWindow):
         '''
         raw_data = QApplication.instance().clipboard().text()
         self.nodeEditorWidget.Paste_def(raw_data)
+
+    def readSettings(self):
+        '''
+
+        :return:
+        '''
+        settings = QSettings(self.name_company, self.name_product)
+        pos = settings.value('pos', QPoint(200, 200))
+        size = settings.value('size', QSize(400, 400))
+        self.move(pos)
+        self.resize(size)
+
+    def writeSettings(self):
+        '''
+
+        :return:
+        '''
+        settings = QSettings(self.name_company, self.name_product)
+        settings.setValue('pos', self.pos())
+        settings.setValue('size', self.size())
+
+    def createStatusBar(self):
+        '''
+
+        :return:
+        '''
+        self.statusBar().showMessage('Ready')
+        self.statusBar().setStyleSheet('background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);')
+        self.statusMousePos = QLabel('')
+        self.statusBar().addPermanentWidget(self.statusMousePos)
+        self.nodeEditorWidget.view.scenePosChanged.connect(self.on_mouse_pos_change)

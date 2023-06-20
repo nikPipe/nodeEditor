@@ -17,6 +17,8 @@ class NodeEditorWidget(QWidget):
         self.styleSheet = styleSheet.STYLESHEET()
 
         self.parent_self = parent
+        self.name_company = 'Nikheel'
+        self.name_product = 'Node Editor'
         self.initUI()
 
 
@@ -58,8 +60,6 @@ class NodeEditorWidget(QWidget):
 
         edge = Edge(self.scene, node1.outputs[0], node2.inputs[4])
         edge = Edge(self.scene, node2.outputs[0], node3.inputs[0], edge_type=EDGE_TYPE_BEZIER)
-
-
 
     def addDebugContent(self):
         '''
@@ -256,7 +256,25 @@ class NodeEditorWidget(QWidget):
         self.scene.grScene.views()[0].deleteSelected()
 
 
+    def readSettings(self):
+        '''
 
+        :return:
+        '''
+        settings = QSettings(self.name_company, self.name_product)
+        pos = settings.value('pos', QPoint(200, 200))
+        size = settings.value('size', QSize(400, 400))
+        self.move(pos)
+        self.resize(size)
+
+    def writeSettings(self):
+        '''
+
+        :return:
+        '''
+        settings = QSettings(self.name_company, self.name_product)
+        settings.setValue('pos', self.pos())
+        settings.setValue('size', self.size())
 
 
 

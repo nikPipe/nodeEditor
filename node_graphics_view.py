@@ -152,7 +152,7 @@ class QDMGraphicsView(QGraphicsView):
             print(item.edge, '  connected sockets: ', item.edge.start_socket, '<------->',item.edge.end_socket)
 
         if type(item) is QDMGraphicsSocket:
-            print(item.socket, ' has Edge: ', item.socket.edge)
+            print(item.socket, ' has Edge: ', item.socket.edges)
 
         if item is None:
             print('Scene:')
@@ -183,11 +183,11 @@ class QDMGraphicsView(QGraphicsView):
         '''
         print('Start dragging edge')
         print('  assign start socket', item.socket)
-        self.prev_edge = item.socket.edge
-        self.last_start_socket = item.socket
+        #self.prev_edge = item.socket.edges
+        self.drag_start_socket = item.socket
 
-        self.dragging_edge = Edge(self.grScene.scene, item.socket, None, EDGE_TYPE_BEZIER)
-        print('Edge drag start: ', self.dragging_edge, ' from ', self.dragging_edge.start_socket)
+        self.drag_edge = Edge(self.grScene.scene, item.socket, None, EDGE_TYPE_BEZIER)
+        print('Edge drag start: ', self.drag_edge, ' from ', self.drag_edge.start_socket)
 
     def edgeDragEnd(self, item):
         '''
@@ -197,32 +197,46 @@ class QDMGraphicsView(QGraphicsView):
         '''
         self.mode = MODE_NOOP
         print('End dragging edge')
+        self.drag_edge.remove()
+        self.drag_edge = None
+
         if type(item) is QDMGraphicsSocket:
-            if item.socket != self.last_start_socket:
+            if item.socket != self.drag_start_socket:
+                # if we released dragging mouse button on the another socket than we started
 
-                print('  previous Edge: ', self.prev_edge)
-                if item.socket.hasEdge():
-                    item.socket.edge.remove()
+                #print('  previous Edge: ', self.prev_edge)
+                #if item.socket.hasEdge():
+                #    item.socket.edges.remove()
+                #for edge in item.socket.edges:
+                #    edge.remove()
+                if not item.socket.is_multi_edges:
+                    item.socket.removeEdges()
 
-                print('  Assign end Socket ', item.socket)
-                if self.prev_edge is not None:
-                    self.prev_edge.remove()
+                if not self.drag_start_socket.is_multi_edges:
+                    self.drag_start_socket.removeEdges()
 
-                self.dragging_edge.start_socket = self.last_start_socket
-                self.dragging_edge.end_socket = item.socket
-                self.dragging_edge.start_socket.setConnectedEdge(self.dragging_edge)
-                self.dragging_edge.end_socket.setConnectedEdge(self.dragging_edge)
+                #print('  Assign end Socket ', item.socket)
+                #if self.prev_edge is not None:
+                #    self.prev_edge.remove()
 
-                self.dragging_edge.updatePositions()
+                #self.drag_edge.start_socket = self.drag_start_socket
+                #self.drag_edge.end_socket = item.socket
+                #self.drag_edge.start_socket.addEdge(self.drag_edge)
+                #self.drag_edge.end_socket.addEdge(self.drag_edge)
 
-                print('  Created: ', self.dragging_edge)
+                #self.drag_edge.updatePositions()
+                new_edge = Edge(self.grScene.scene, self.drag_start_socket, item.socket, EDGE_TYPE_BEZIER)
+                print('  Created: ', new_edge, ' from ', new_edge.start_socket, ' to ', new_edge.end_socket)
+
+
+
+                print('  Created: ', self.drag_edge)
 
                 return True
 
-        self.dragging_edge.remove()
-        self.dragging_edge = None
-        if self.prev_edge is not None:
-            self.prev_edge.start_socket.edge = self.prev_edge
+
+        #if self.prev_edge is not None:
+        #    self.prev_edge.start_socket.edges = self.prev_edge
         self.grScene.scene.history.storeHistory('Created new edge by dragging')
 
         return False
@@ -350,8 +364,8 @@ class QDMGraphicsView(QGraphicsView):
         '''
         if self.mode == MODE_EDGE_DRAG:
             pos = self.mapToScene(event.pos())
-            self.dragging_edge.grEdge.setDestination(pos.x(), pos.y())
-            self.dragging_edge.grEdge.update()
+            self.drag_edge.grEdge.setDestination(pos.x(), pos.y())
+            self.drag_edge.grEdge.update()
 
         if self.mode == MODE_EDGE_CUT:
             pos = self.mapToScene(event.pos())

@@ -25,6 +25,8 @@ class Edge(Serializable):
 
         self.scene = scene
 
+        self._start_socket = None
+        self._end_socket = None
         self.start_socket = start_socket
         self.end_socket = end_socket
         self.edge_type = edge_type
@@ -45,9 +47,17 @@ class Edge(Serializable):
         :param value:
         :return:
         '''
-        self._end_socket = value
+        #if we were assigned to a socket before delete us from that socket
         if self._end_socket is not None:
-            self._end_socket.edge = self
+            self._end_socket.removeEdge(self) #remove edge from socket class
+
+
+
+        #assign new end socket
+        self._end_socket = value
+        #add edge to socket class
+        if self._end_socket is not None:
+            self._end_socket.addEdge(self)
 
 
 
@@ -64,9 +74,15 @@ class Edge(Serializable):
         :param value:
         :return:
         '''
-        self._start_socket = value
+        #if we were assigned to a socket before delete us from that socket
         if self._start_socket is not None:
-            self._start_socket.edge = self
+            self._start_socket.removeEdge(self) #remove edge from socket class
+
+        #assign new start socket
+        self._start_socket = value
+        #add edge to socket class
+        if self._start_socket is not None:
+            self._start_socket.addEdge(self)
 
     @property
     def edge_type(self):
@@ -122,10 +138,11 @@ class Edge(Serializable):
         '''
         :return:
         '''
-        if self.start_socket is not None:
-            self.start_socket.edge = None
-        if self.end_socket is not None:
-            self.end_socket.edge = None
+        #TODO: FIX THIS
+        #if self.start_socket is not None:
+        #    self.start_socket.removeEdge(None)
+        #if self.end_socket is not None:
+        #    self.end_socket.removeEdge(None)
 
         self.end_socket = None
         self.start_socket = None

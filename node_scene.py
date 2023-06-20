@@ -85,7 +85,10 @@ class Scene(Serializable):
         :param node:
         :return:
         '''
-        self.nodes.remove(node)
+        if node in self.nodes:
+            self.nodes.remove(node)
+        else:
+            print('ERROR: Scene.removeNode', 'wanna remove node', node, 'from self.nodes but it is not in the list')
 
     def removeEdge(self, edge):
         '''
@@ -93,7 +96,10 @@ class Scene(Serializable):
         :param edge:
         :return:
         '''
-        self.edges.remove(edge)
+        if edge in self.edges:
+            self.edges.remove(edge)
+        else:
+            print('ERROR: Scene.removeEdge', 'wanna remove edge', edge, 'from self.edges but it is not in the list')
 
     def clear(self):
         '''

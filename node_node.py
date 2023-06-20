@@ -37,13 +37,13 @@ class Node(Serializable):
         self.outputs = []
         counter = 0
         for item in inputs:
-            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item)
+            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item, multi_edges=False)
             self.inputs.append(socket)
             counter += 1
 
         counter = 0
         for item in outputs:
-            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item)
+            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item, multi_edges=True)
             self.outputs.append(socket)
             counter += 1
 
@@ -87,8 +87,9 @@ class Node(Serializable):
         :return:
         '''
         for socket in self.inputs + self.outputs:
-            if socket.hasEdge():
-                socket.edge.updatePositions()
+            #if socket.hasEdge():
+            for edge in socket.edges:
+                edge.updatePositions()
     def __str__(self):
         '''
 
@@ -102,8 +103,9 @@ class Node(Serializable):
         :return:
         '''
         for socket in (self.inputs + self.outputs):
-            if socket.hasEdge():
-                socket.edge.remove()
+            #if socket.hasEdge():
+            for edge in socket.edges:
+                edge.remove()
 
         self.scene.grScene.update()
 

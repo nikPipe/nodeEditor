@@ -28,18 +28,53 @@ class Scene(Serializable):
 
         self._hasbeenModified = False
         self._hasbeenModified_listners = []
+        self._item_selected_listners = []
+        self._item_deSelected_listners = []
+
+
 
         self.scene_width, self.scene_height = 64000, 64000
+        self.initUI()
         self.history = SceneHistory(self)
         self.clipboard = SceneClipboard(self)
+        self.grScene.itemSelected.connect(self.onItemSelected)
+        self.grScene.itemDeselected.connect(self.onItemDeselected)
 
 
-        self.initUI()
+    def initUI(self):
+        '''
+
+        :return:
+        '''
+        self.grScene = QDMGraphicScene(self)
+        self.grScene.setGrScene(self.scene_width, self.scene_height)
+
+    def onItemSelected(self):
+        '''
+
+        :return:
+        '''
+        print("scene.onItemSelected")
+
+    def onItemDeselected(self):
+        '''
+
+        :return:
+        '''
+        print("scene.onItemDeselected")
+
+    #CUSTOM FLAG TO DETECT IF THE SCENE HAS BEEN MODIFIED
+    def resetLastSelectedState(self):
+        for node in self.nodes:
+            node.grNode._last_selected_state = False
+
+        for edge in self.edges:
+            edge.grEdge._last_selected_state = False
 
     def isModified(self):
         return self.hasBeenModified
 
-    def getSelectedItems(self):
+    def getselectedItems(self):
         return self.grScene.selectedItems()
 
     @property
@@ -61,13 +96,12 @@ class Scene(Serializable):
         self._hasbeenModified_listners.append(callback)
 
 
-    def initUI(self):
-        '''
+    def addSelectedItemListner(self, callback):
+        self._item_selected_listners.append(callback)
 
-        :return:
-        '''
-        self.grScene = QDMGraphicScene(self)
-        self.grScene.setGrScene(self.scene_width, self.scene_height)
+    def addDeSelectedItemListner(self, callback):
+        self._item_deSelected_listners.append(callback)
+
 
     def addNode(self, node):
         '''

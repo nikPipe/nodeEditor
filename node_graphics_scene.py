@@ -3,11 +3,9 @@ from PyQt.import_module import *
 from PyQt import sample_widget_template, color_variable, styleSheet
 import math
 
-
-
-
-
 class QDMGraphicScene(QGraphicsScene):
+    itemSelected = pyqtSignal()
+    itemDeselected = pyqtSignal()
     def __init__(self, scene, parent=None):
         super().__init__(parent)
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()

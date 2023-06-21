@@ -287,7 +287,8 @@ class QDMGraphicsView(QGraphicsView):
             return
 
         if self.dragMode() == QGraphicsView.RubberBandDrag:
-            self.grScene.scene.history.storeHistory('Selection changed')
+            if item is not None:
+                self.grScene.scene.history.storeHistory('Selection changed')
 
         super().mouseReleaseEvent(event)
 

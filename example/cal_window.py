@@ -192,6 +192,7 @@ class calWindow(NdeEditorWindow):
         :return:
         '''
         self.nodeEditorWidget = calSubWindow()
+        self.nodeEditorWidget.addNodes()
         subwnd = self.mdiArea.addSubWindow(self.nodeEditorWidget)
 
 
@@ -252,9 +253,6 @@ class calWindow(NdeEditorWindow):
             self.cutAction.setEnabled(hasMdiChild and active.hasSelectedItems())
             self.copyAction.setEnabled(hasMdiChild and active.hasSelectedItems())
             self.deleteAction.setEnabled(hasMdiChild and active.hasSelectedItems())
-
-
-
 
 
     def setActiveSubWindow(self, window):

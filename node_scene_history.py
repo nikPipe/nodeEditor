@@ -1,4 +1,5 @@
 from nodeEditor.node_edge import *
+from nodeEditor.utils import dumpException
 
 
 class SceneHistory():
@@ -6,19 +7,31 @@ class SceneHistory():
     def __init__(self, scene):
         self.scene = scene
         self.val = 'Something'
+        self.clear()
+        self.history_limit = 100
+
+    def clear(self):
         self.history_stake = []
         self.history_current_step = -1
-        self.history_limit = 100
+
+    def storeInitialHistoryStamp(self):
+        self.storeHistory('Initial History Stamp')
+
+    def canUndo(self):
+        return self.history_current_step > 0
+
+    def canRedo(self):
+        return self.history_current_step + 1 < len(self.history_stake)
 
     def undo(self):
         print('undo')
-        if self.history_current_step > 0:
+        if self.canUndo():
             self.history_current_step -= 1
             self.restoreHistory()
 
     def redo(self):
         print('redo')
-        if self.history_current_step + 1 < len(self.history_stake):
+        if self.canRedo():
             self.history_current_step += 1
             self.restoreHistory()
 
@@ -66,17 +79,19 @@ class SceneHistory():
     def restoreHistoryStamp(self, history_stamp):
 
         self.scene.deserialize(history_stamp['snapshot'])
-
-        for each_id in history_stamp['selection']['edges']:
-            for edge in self.scene.edges:
-                if edge.id == each_id:
-                    edge.grEdge.setSelected(True)
-                    break
-        for node_id in history_stamp['selection']['nodes']:
-            for node in self.scene.nodes:
-                if node.id == node_id:
-                    node.grNode.setSelected(True)
-                    break
+        try:
+            for each_id in history_stamp['selection']['edges']:
+                for edge in self.scene.edges:
+                    if edge.id == each_id:
+                        edge.grEdge.setSelected(True)
+                        break
+            for node_id in history_stamp['selection']['nodes']:
+                for node in self.scene.nodes:
+                    if node.id == node_id:
+                        node.grNode.setSelected(True)
+                        break
+        except Exception as e:
+            dumpException(e)
 
 
 

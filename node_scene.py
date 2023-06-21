@@ -36,6 +36,11 @@ class Scene(Serializable):
 
         self.initUI()
 
+    def isModified(self):
+        return self.hasBeenModified
+
+    def getSelectedItems(self):
+        return self.grScene.selectedItems()
 
     @property
     def hasBeenModified(self):

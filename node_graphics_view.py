@@ -127,7 +127,6 @@ class QDMGraphicsView(QGraphicsView):
             if res: return
 
         if item is None:
-            print('this is running 1')
             if event.modifiers() & Qt.ControlModifier:
                 self.mode = MODE_EDGE_CUT
                 fakeEvent = QMouseEvent(QEvent.MouseButtonRelease, event.localPos(), event.screenPos(),

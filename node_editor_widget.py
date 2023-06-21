@@ -20,6 +20,7 @@ class NodeEditorWidget(QWidget):
         self.name_company = 'Nikheel'
         self.name_product = 'Node Editor'
         self.filename = None
+        self.copyData = None
         self.initUI()
 
 
@@ -33,9 +34,6 @@ class NodeEditorWidget(QWidget):
 
         # CREATE GRAPHICS SCENE
         self.scene = Scene(self)
-
-        self.addNodes()
-
 
         #CREATE GRAPHICS VIEW
         self.view = QDMGraphicsView(self.scene.grScene, self)
@@ -80,6 +78,9 @@ class NodeEditorWidget(QWidget):
         edge = Edge(self.scene, node1.outputs[0], node2.inputs[4])
         edge = Edge(self.scene, node2.outputs[0], node3.inputs[0], edge_type=EDGE_TYPE_BEZIER)
 
+        self.scene.history.clear()
+        self.scene.history.storeInitialHistoryStamp()
+
     def addDebugContent(self):
         '''
 
@@ -121,6 +122,36 @@ class NodeEditorWidget(QWidget):
         line.setFlag(QGraphicsItem.ItemIsMovable)
         line.setFlag(QGraphicsItem.ItemIsSelectable)
 
+
+    def getSelectedItems(self):
+        '''
+
+        :return:
+        '''
+        return self.scene.getselectedItems()
+
+    def hasSelectedItems(self):
+        '''
+
+        :return:
+        '''
+
+        return self.getSelectedItems() != []
+
+    def canUndo(self):
+        '''
+
+        :return:
+        '''
+        return self.scene.history.canUndo()
+
+    def canRedo(self):
+        '''
+
+        :return:
+        '''
+        return self.scene.history.canRedo()
+
     def New_def(self):
         '''
 
@@ -129,6 +160,8 @@ class NodeEditorWidget(QWidget):
         if self.maybeSave():
             self.scene.clear()
             self.filename = None
+            self.scene.history.clear()
+            self.scene.history.storeInitialHistoryStamp()
             return True
         return False
 
@@ -144,6 +177,9 @@ class NodeEditorWidget(QWidget):
             self.scene.loadFromFile(fname)
             self.filename = fname
             self.setTitle_(self)
+            self.scene.history.clear()
+            self.scene.history.storeInitialHistoryStamp()
+
 
     def Save_def(self, fileName=None):
         '''
@@ -162,18 +198,6 @@ class NodeEditorWidget(QWidget):
             self.filename = fileName
             self.setTitle_(self)
             return True
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     def SaveAs_def(self):
@@ -230,7 +254,7 @@ class NodeEditorWidget(QWidget):
 
         :return:
         '''
-        return self.scene.hasBeenModified
+        return self.scene.isModified()
 
     def maybeSave(self):
         '''

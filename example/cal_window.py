@@ -79,7 +79,7 @@ class calWindow(NdeEditorWindow):
         self.helpMenu = self.menuBar().addMenu("&Help")
         self.helpMenu.addAction(self.actAbout)
 
-        #self.editMenu.aboutToShow.connect(self.updateEditMenu)
+        self.editMenu.aboutToShow.connect(self.updateEditMenu)
 
     def NewFile(self):
         '''
@@ -153,6 +153,27 @@ class calWindow(NdeEditorWindow):
         self.statusBar().showMessage("File %s saved" % (self.nodeEditorWidget.filename), 5000)
         self.nodeEditorWidget.setTitle_()
 
+    def copyFile(self):
+        '''
+
+        :return:
+        '''
+        print('''this is copyFile''')
+        widget = self.mdiArea.currentSubWindow().widget()
+        currentSubWindow = self.mdiArea.currentSubWindow()
+        widget.copyData = currentSubWindow.widget().Copy_def()
+
+    def pasteFile(self):
+        '''
+
+        :return:
+        '''
+        print('''this is pasteFile''')
+        currentSubWindow = self.mdiArea.currentSubWindow()
+        widget = self.mdiArea.currentSubWindow().widget()
+        if widget.copyData is not None:
+            widget.Paste_def(widget.copyData)
+
 
     def findMdiChild(self, fname):
         '''
@@ -211,6 +232,27 @@ class calWindow(NdeEditorWindow):
         self.actCascade.setEnabled(hasMdiChild)
         self.actNext.setEnabled(hasMdiChild)
         self.actPrevious.setEnabled(hasMdiChild)
+
+        self.updateEditMenu()
+
+    def updateEditMenu(self):
+        print('''this is updateEditMenu''')
+        active = self.getCurrentNodeEditorWidget()
+        hasMdiChild = (active is not None)
+        self.pasteAction.setEnabled(hasMdiChild)
+
+        if active is not None:
+
+            if active.copyData is None:
+                self.pasteAction.setEnabled(False)
+
+            self.undoAction.setEnabled(hasMdiChild and active.canUndo())
+            self.redoAction.setEnabled(hasMdiChild and active.canRedo())
+
+            self.cutAction.setEnabled(hasMdiChild and active.hasSelectedItems())
+            self.copyAction.setEnabled(hasMdiChild and active.hasSelectedItems())
+            self.deleteAction.setEnabled(hasMdiChild and active.hasSelectedItems())
+
 
 
 

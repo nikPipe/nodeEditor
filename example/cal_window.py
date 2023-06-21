@@ -3,6 +3,8 @@ from PyQt import sample_widget_template, color_variable, styleSheet
 from collections import OrderedDict
 from nodeEditor.node_sertializable import Serializable
 from nodeEditor.node_editor_window import NdeEditorWindow
+from nodeEditor.example.cal_sub_window import calSubWindow
+from nodeEditor.utils import *
 import math
 
 class calWindow(NdeEditorWindow):
@@ -78,6 +80,35 @@ class calWindow(NdeEditorWindow):
 
         #self.editMenu.aboutToShow.connect(self.updateEditMenu)
 
+    def NewFile(self):
+        '''
+
+        :return:
+        '''
+        try:
+            subWindow = self.createMdiChild()
+            subWindow.show()
+        except Exception as e:
+            dumpException(e)
+
+    def openFile(self):
+        '''
+
+        :return:
+        '''
+        print('File is open')
+
+    def createMdiChild(self):
+        '''
+
+        :return:
+        '''
+        self.nodeEditorWidget = calSubWindow()
+        subwnd = self.mdiArea.addSubWindow(self.nodeEditorWidget)
+
+        return subwnd
+
+
     def createToolBars(self):
         '''
 
@@ -108,14 +139,13 @@ class calWindow(NdeEditorWindow):
 
         :return:
         '''
-        self.dock = QDockWidget("calc Node", self)
+        self.nodesDock = QDockWidget("calc Node", self)
         itemList = ['Add', 'Subtract', 'Multiply', 'Divide', 'Modulus', 'Power', 'Square Root', 'Logarithm', 'Sine']
-        listWidget = self.sample_widget_template.list_widget(parent_self=self.dock, items=itemList)
-        self.dock.setWidget(listWidget)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
-        self.dock.setFloating(False)
-        self.dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
-
+        listWidget = self.sample_widget_template.list_widget(parent_self=self.nodesDock, items=itemList)
+        self.nodesDock.setWidget(listWidget)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.nodesDock)
+        self.nodesDock.setFloating(False)
+        self.nodesDock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
 
     def closeEvent(self, event):
         '''
@@ -136,14 +166,14 @@ class calWindow(NdeEditorWindow):
                 "document interface applications using PyQt5 and NodeEditor. For more information visit: "
                 "<a href='https://www.blenderfreak.com/'>www.BlenderFreak.com</a>")
 
-
     def updateWindowMenu(self):
+        print('updateWindowMenu')
         self.windowMenu.clear()
 
         toolbar_nodes = self.windowMenu.addAction("Nodes Toolbar")
         toolbar_nodes.setCheckable(True)
         toolbar_nodes.triggered.connect(self.onWindowNodesToolbar)
-        #toolbar_nodes.setChecked(self.nodesDock.isVisible())
+        # toolbar_nodes.setChecked(self.nodesDock.isVisible())
 
         self.windowMenu.addSeparator()
 
@@ -173,6 +203,12 @@ class calWindow(NdeEditorWindow):
             action.triggered.connect(self.windowMapper.map)
             self.windowMapper.setMapping(action, window)
 
+    def getCurrentNodeEditorWidget(self):
+        """ we're returning NodeEditorWidget here... """
+        activeSubWindow = self.mdiArea.activeSubWindow()
+        if activeSubWindow:
+            return activeSubWindow.widget()
+        return None
 
     def onWindowNodesToolbar(self):
         if self.nodesDock.isVisible():

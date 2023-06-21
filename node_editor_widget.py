@@ -19,6 +19,7 @@ class NodeEditorWidget(QWidget):
         self.parent_self = parent
         self.name_company = 'Nikheel'
         self.name_product = 'Node Editor'
+        self.filename = None
         self.initUI()
 
 
@@ -34,7 +35,7 @@ class NodeEditorWidget(QWidget):
         self.scene = Scene(self)
 
         self.addNodes()
-        self.filename = None
+
 
         #CREATE GRAPHICS VIEW
         self.view = QDMGraphicsView(self.scene.grScene, self)
@@ -44,6 +45,23 @@ class NodeEditorWidget(QWidget):
         self.changeTitle(self)
 
         #self.addDebugContent()
+
+    def isFilenameSet(self):
+        '''
+
+        :return:
+        '''
+
+        return self.filename is not None
+
+    def getUserFriendlyFilename(self):
+        '''
+
+        :return:
+        '''
+        name = "Untitled" if self.filename is None else os.path.basename(self.filename)
+        return name + ("*" if self.isModified() else "")
+
 
     def addNodes(self):
         '''
@@ -218,15 +236,19 @@ class NodeEditorWidget(QWidget):
 
         :return:
         '''
-        title = 'Node Editor - '
+
+        title = self.getUserFriendlyFilename()
         if self.filename is None:
-            title += 'Untitled'
+            pass
 
         else:
             title += os.path.basename(self.filename)
 
         if self.isModified():
-            title += '*'
+            if '*' not in title:
+                title += '*'
+
+
 
         if self.parent_self is None:
             object.setWindowTitle(title)

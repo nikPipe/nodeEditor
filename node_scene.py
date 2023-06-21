@@ -9,6 +9,8 @@ from nodeEditor.node_edge import Edge
 from nodeEditor.node_scene_history import SceneHistory
 from nodeEditor.node_scene_clipboard import SceneClipboard
 
+class InvalidFile(Exception): pass
+
 
 class Scene(Serializable):
     def __init__(self, parentSelf=None):
@@ -131,11 +133,33 @@ class Scene(Serializable):
         :param filename:
         :return:
         '''
-        with open(filename, 'r') as file:
-            raw_data = file.read()
-            data = json.loads(raw_data)
-            self.deserialize(data)
-            self.hasBeenModified = False
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            with open(filename, 'r') as file:
+                raw_data = file.read()
+                data = json.loads(raw_data)
+                self.deserialize(data)
+                self.hasBeenModified = False
+
+                QApplication.restoreOverrideCursor()
+
+                return True
+        except json.JSONDecodeError as e:
+            QApplication.restoreOverrideCursor()
+            raise InvalidFile('%s is not a valid JSON file' % filename)
+            return False
+
+        except Exception as e:
+            QApplication.restoreOverrideCursor()
+            QMessageBox.critical(self, "Error", "Could not open file: {}".format(e))
+            return False
+
+        finally:
+            QApplication.restoreOverrideCursor()
+
+        return False
+
+
 
 
 

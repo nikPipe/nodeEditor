@@ -28,7 +28,7 @@ class NdeEditorWindow(QMainWindow):
 
         #SET WINDOW PROPERTIES
         self.setGeometry(600, 300, 800, 600)
-        self.nodeEditorWidget.changeTitle(self)
+        self.nodeEditorWidget.setTitle_(self)
         #STATE BAR
         self.createStatusBar()
         self.nodeEditorWidget.view.scenePosChanged.connect(self.on_mouse_pos_change)
@@ -140,6 +140,7 @@ class NdeEditorWindow(QMainWindow):
         :return:
         '''
         print('Save File')
+
         fileName = self.nodeEditorWidget.Save_def()
         self.statusBar().showMessage('File Saved %s' % fileName)
         return True

@@ -42,7 +42,7 @@ class NodeEditorWidget(QWidget):
         self.setGeometry(300, 300, 800, 600)
         self.layout.addWidget(self.view)
 
-        self.changeTitle(self)
+        self.setTitle_(self)
 
         #self.addDebugContent()
 
@@ -59,7 +59,8 @@ class NodeEditorWidget(QWidget):
 
         :return:
         '''
-        name = "Untitled" if self.filename is None else os.path.basename(self.filename)
+
+        name = "Untitled" if self.filename is None else self.filename
         return name + ("*" if self.isModified() else "")
 
 
@@ -137,7 +138,7 @@ class NodeEditorWidget(QWidget):
         :return:
         '''
         if self.maybeSave():
-            fname, filter = QFileDialog.getOpenFileName(self, 'Open file New')
+            fname, filter = QFileDialog.getOpenFileName(self, 'Open file New', filter='*.json')
             if fname == '':
                 return
 
@@ -145,30 +146,36 @@ class NodeEditorWidget(QWidget):
                 self.scene.loadFromFile(fname)
                 self.filename = fname
                 print("Loaded", fname)
-                self.changeTitle(self)
+                self.setTitle(self)
 
-    def Save_def(self):
+    def Save_def(self, fileName=None):
         '''
 
         :return:
         '''
-        fname, filter = QFileDialog.getSaveFileName(self, 'Save file New', filter='*.json')
-        if fname == '':
-            return
-        self.scene.saveToFile(fname)
-        self.filename = fname
-        return fname
+        if fileName is None:
+            if self.filename is None:
+                return self.SaveAs_def()
+
+        else:
+            self.scene.saveToFile(fileName)
+            self.filename = fileName
+            self.setTitle_()
+            return True
+
+
 
     def SaveAs_def(self):
         '''
 
         :return:
         '''
-        fname, filter = QFileDialog.getSaveFileName(self, 'Save file New', filter='*.json')
+        fname, filter = QFileDialog.getSaveFileName(self, 'Save file As New', filter='*.json')
         if fname == '':
             return False
         self.scene.saveToFile(fname)
         self.filename = fname
+        self.setTitle_()
         return True
 
     def Cut_def(self):
@@ -231,24 +238,12 @@ class NodeEditorWidget(QWidget):
 
         return True
 
-    def changeTitle(self, object=None):
+    def setTitle_(self, object=None):
         '''
 
         :return:
         '''
-
         title = self.getUserFriendlyFilename()
-        if self.filename is None:
-            pass
-
-        else:
-            title += os.path.basename(self.filename)
-
-        if self.isModified():
-            if '*' not in title:
-                title += '*'
-
-
 
         if self.parent_self is None:
             object.setWindowTitle(title)

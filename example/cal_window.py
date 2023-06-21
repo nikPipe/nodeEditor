@@ -50,6 +50,7 @@ class calWindow(NdeEditorWindow):
                                    triggered=self.mdiArea.closeAllSubWindows)
 
         self.actTile = QAction("&Tile", self, statusTip="Tile the windows", triggered=self.mdiArea.tileSubWindows)
+
         self.actCascade = QAction("&Cascade", self, statusTip="Cascade the windows",
                                   triggered=self.mdiArea.cascadeSubWindows)
 
@@ -88,6 +89,7 @@ class calWindow(NdeEditorWindow):
         try:
             subWindow = self.createMdiChild()
             subWindow.show()
+            self.updateMenus()
         except Exception as e:
             dumpException(e)
 
@@ -96,7 +98,69 @@ class calWindow(NdeEditorWindow):
 
         :return:
         '''
-        print('File is open')
+        try:
+            fnames, filter = QFileDialog.getOpenFileNames(self, 'Open graph from file', filter='*.json')
+            if fnames != []:
+                for each in fnames:
+                    existing = self.findMdiChild(os.path.basename(each))
+                    if existing:
+                        self.mdiArea.setActiveSubWindow(existing)
+                    else:
+                        self.nodeEditorWidget = calSubWindow()
+                        if self.nodeEditorWidget.scene.loadFromFile(each):
+                            self.statusBar().showMessage("File %s loaded" % (each), 5000)
+                            self.nodeEditorWidget.setTitle()
+                            subwnd = self.mdiArea.addSubWindow(self.nodeEditorWidget)
+                            subwnd.show()
+                            self.nodeEditorWidget.filename = os.path.abspath(each)
+                            self.nodeEditorWidget.setTitle()
+                        else:
+                            self.nodeEditorWidget.close()
+
+        except Exception as e:
+            dumpException(e)
+        self.updateMenus()
+
+    def close(self):
+        '''
+
+        :return:
+        '''
+    def saveFile(self):
+        '''
+
+        :return:
+        '''
+
+        currentSubWindow = self.mdiArea.currentSubWindow()
+        filename = currentSubWindow.widget().filename
+        self.nodeEditorWidget.Save_def(fileName=filename)
+        self.statusBar().showMessage("File %s saved" % (filename), 5000)
+        self.nodeEditorWidget.setTitle_()
+
+
+
+    def saveAsFile(self):
+        '''
+
+        :return:
+        '''
+        print('''this is saveAsFile''')
+        self.nodeEditorWidget.SaveAs_def()
+        self.statusBar().showMessage("File %s saved" % (self.nodeEditorWidget.filename), 5000)
+        self.nodeEditorWidget.setTitle_()
+
+
+    def findMdiChild(self, fname):
+        '''
+
+        :param fname:
+        :return:
+        '''
+        for wnd in self.mdiArea.subWindowList():
+            if fname in wnd.widget().getUserFriendlyFilename():
+                return wnd
+        return None
 
     def createMdiChild(self):
         '''
@@ -105,6 +169,7 @@ class calWindow(NdeEditorWindow):
         '''
         self.nodeEditorWidget = calSubWindow()
         subwnd = self.mdiArea.addSubWindow(self.nodeEditorWidget)
+
 
         return subwnd
 
@@ -116,14 +181,36 @@ class calWindow(NdeEditorWindow):
         '''
         pass
 
-
-
+    def getCurrentNodeEditorWidget(self):
+        """ we're returning NodeEditorWidget here... """
+        activeSubWindow = self.mdiArea.activeSubWindow()
+        if activeSubWindow:
+            return activeSubWindow.widget()
+        return None
     def updateMenus(self):
         '''
 
         :return:
         '''
-        pass
+        active = self.getCurrentNodeEditorWidget()
+        hasMdiChild = (active is not None)
+        self.saveAction.setEnabled(hasMdiChild)
+        self.saveAsAction.setEnabled(hasMdiChild)
+        self.cutAction.setEnabled(hasMdiChild)
+        self.copyAction.setEnabled(hasMdiChild)
+        self.pasteAction.setEnabled(hasMdiChild)
+        self.undoAction.setEnabled(hasMdiChild)
+        self.redoAction.setEnabled(hasMdiChild)
+        self.deleteAction.setEnabled(hasMdiChild)
+        self.actClose.setEnabled(hasMdiChild)
+        self.actCloseAll.setEnabled(hasMdiChild)
+        self.actTile.setEnabled(hasMdiChild)
+        self.actCascade.setEnabled(hasMdiChild)
+        self.actNext.setEnabled(hasMdiChild)
+        self.actPrevious.setEnabled(hasMdiChild)
+
+
+
 
     def setActiveSubWindow(self, window):
         '''

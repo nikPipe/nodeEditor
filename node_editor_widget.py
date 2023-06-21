@@ -137,16 +137,13 @@ class NodeEditorWidget(QWidget):
 
         :return:
         '''
-        if self.maybeSave():
-            fname, filter = QFileDialog.getOpenFileName(self, 'Open file New', filter='*.json')
-            if fname == '':
-                return
-
-            if os.path.isfile(fname):
-                self.scene.loadFromFile(fname)
-                self.filename = fname
-                print("Loaded", fname)
-                self.setTitle(self)
+        fname, filter = QFileDialog.getOpenFileName(self, 'Open file New', filter='*.json')
+        if fname == '':
+            return
+        if os.path.isfile(fname):
+            self.scene.loadFromFile(fname)
+            self.filename = fname
+            self.setTitle_(self)
 
     def Save_def(self, fileName=None):
         '''
@@ -156,12 +153,26 @@ class NodeEditorWidget(QWidget):
         if fileName is None:
             if self.filename is None:
                 return self.SaveAs_def()
-
+            else:
+                self.scene.saveToFile(self.filename)
+                self.setTitle_(self)
+                return True
         else:
             self.scene.saveToFile(fileName)
             self.filename = fileName
-            self.setTitle_()
+            self.setTitle_(self)
             return True
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -131,12 +131,15 @@ class calWindow(NdeEditorWindow):
 
         :return:
         '''
-
         currentSubWindow = self.mdiArea.currentSubWindow()
+
         filename = currentSubWindow.widget().filename
-        self.nodeEditorWidget.Save_def(fileName=filename)
+        if filename is None:
+            currentSubWindow.widget().filename = None
+
+        currentSubWindow.widget().Save_def(fileName=filename)
         self.statusBar().showMessage("File %s saved" % (filename), 5000)
-        self.nodeEditorWidget.setTitle_()
+        currentSubWindow.widget().setTitle_()
 
 
 

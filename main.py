@@ -1,10 +1,11 @@
-import os,inspect
+import os,inspect, sys
 from nodeEditor.utils import loadStylesheets
 
 from PyQt.import_module import *
 from nodeEditor.node_editor_widget import NodeEditorWidget
 from nodeEditor.node_editor_window import NdeEditorWindow
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'nodeEditor'))
 
 
 if __name__ == '__main__':

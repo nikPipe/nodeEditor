@@ -3,7 +3,7 @@ from nodeEditor.example.cal_window import calWindow
 from nodeEditor.node_editor_window import NdeEditorWindow
 from nodeEditor.utils import loadStylesheets
 import inspect, os
-
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'nodeEditor'))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

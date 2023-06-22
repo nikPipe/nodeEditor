@@ -6,6 +6,8 @@ from nodeEditor.node_editor_window import NdeEditorWindow
 from nodeEditor.example.cal_sub_window import calSubWindow
 from nodeEditor.utils import *
 from nodeEditor.example.calc_drag_listWidget import QDMListBox
+from nodeEditor.example.calc_conf import *
+from nodeEditor.example.calc_conf_nodes import *
 import math
 
 class calWindow(NdeEditorWindow):
@@ -17,6 +19,9 @@ class calWindow(NdeEditorWindow):
         '''
         #super(calWindow, self).initUI()
 
+        print('calWindow initUI')
+        print('Registering node classes')
+        print(CALC_NODES)
 
         self.mdiArea = QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)

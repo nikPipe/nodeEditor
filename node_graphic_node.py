@@ -34,7 +34,6 @@ class QDmGraphicsNode(QGraphicsItem):
         :return:
         '''
         self.initTitle()
-        self.initSockets()
         self.initContent()
         self.title = self.node.title
 
@@ -106,8 +105,6 @@ class QDmGraphicsNode(QGraphicsItem):
                                  int(self.height - 2 * self.edge_size - self.title_height))
         self.grContent.setWidget(self.content)
 
-    def initSockets(self):
-        pass
 
     def mouseMoveEvent(self, event):
         '''

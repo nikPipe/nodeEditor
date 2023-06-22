@@ -29,15 +29,17 @@ class calGraphNode(QDmGraphicsNode):
 
 
 class CalNode(Node):
-    def __init__(self, scene, op_code, op_title, contentLabel='', content_label_objectName='cal_node_bg', inputs=[2, 2], outputs=[1]):
-        self.op_code = op_code
-        self.op_title = op_title
+    op_icon = ''
+    op_code = 0
+    op_title = 'Undefined'
+    content_label = ''
+    content_label_objectName = ''
 
-        self.content_label = contentLabel
-        self.content_label_objectName = content_label_objectName
+    def __init__(self, scene,  inputs=[2, 2], outputs=[1]):
 
 
-        super().__init__(scene, title=self.op_title, inputs=inputs, outputs=outputs)
+
+        super().__init__(scene, title=self.__class__.op_title, inputs=inputs, outputs=outputs)
 
 
     def initInnerClasses(self):

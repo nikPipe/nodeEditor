@@ -32,16 +32,22 @@ class QDMListBox(QListWidget):
 
         :return:
         '''
+        keys = list(CALC_NODES.keys())
+        keys.sort()
+        for key in keys:
+            node = CALC_NODES[key]
+            self.addMyItem(node.op_title, node.op_icon, node.op_code)
+
         itemList = ['Add', 'Subtract', 'Multiply', 'Divide', 'Modulus', 'Power', 'Square Root', 'Logarithm', 'Sine', 'Input', 'Output']
         iconList = ['icons/add.png', 'icons/subtract.png', 'icons/multiply.png', 'icons/divide.png', 'icons/modulus.png', 'icons/power.png',
                     'icons/square_root.png', 'icons/logarithm.png', 'icons/sine.png', 'icons/input.png', 'icons/output.png']
 
-        self.addMyItem('Input', 'icons/in.png', OP_NODE_INPUT)
-        self.addMyItem('Output', 'icons/out.png', OP_NODE_OUTPUT)
-        self.addMyItem('Add', 'icons/add.png', OP_NODE_ADD)
-        self.addMyItem('Subtract', 'icons/sub.png', OP_NODE_SUB)
-        self.addMyItem('Multiply', 'icons/mul.png', OP_NODE_MUL)
-        self.addMyItem('Divide', 'icons/divide.png', OP_NODE_DIV)
+        #self.addMyItem('Input', 'icons/in.png', OP_NODE_INPUT)
+        #self.addMyItem('Output', 'icons/out.png', OP_NODE_OUTPUT)
+        #self.addMyItem('Add', 'icons/add.png', OP_NODE_ADD)
+        #self.addMyItem('Subtract', 'icons/sub.png', OP_NODE_SUB)
+        #self.addMyItem('Multiply', 'icons/mul.png', OP_NODE_MUL)
+        #self.addMyItem('Divide', 'icons/divide.png', OP_NODE_DIV)
 
 
     def addMyItem(self, name, icon=None, op_code=0):

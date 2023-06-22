@@ -3,6 +3,7 @@ from PyQt.import_module import *
 from nodeEditor.node_editor_widget import NodeEditorWidget
 from nodeEditor.example.calc_conf import *
 from nodeEditor.example.calcNodeBase import *
+from nodeEditor.utils import dumpException
 
 
 class calSubWindow(NodeEditorWidget):
@@ -47,13 +48,13 @@ class calSubWindow(NodeEditorWidget):
             text = data_stream.readQString()
             mouse_position = event.pos()
             scene_position = self.scene.grScene.views()[0].mapToScene(mouse_position)
-            print('Got Drop: (%d) %s' % (op_code, text), 'op_code: ', op_code, 'pixmap: ', pixmap, 'mouse_position: ', mouse_position, 'scene_position: ', scene_position)
 
-            #TODO: add node at scene_position
-            node = CalNode(self.scene, op_code, text, contentLabel=text,  inputs=[1, 1], outputs=[2])
-            print('node: ', node)
-            node.setPos(scene_position.x(), scene_position.y())
-
+            try:
+                node = get_class_from_opcode(op_code)(self.scene)
+                node.setPos(scene_position.x(), scene_position.y())
+                self.scene.history.storeHistory('Created %s node' % node.__class__.__name__)
+            except Exception as e:
+                dumpException(e)
 
 
             event.setDropAction(Qt.MoveAction)

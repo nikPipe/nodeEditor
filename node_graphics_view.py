@@ -290,6 +290,12 @@ class QDMGraphicsView(QGraphicsView):
             if item is not None:
                 self.grScene.scene.history.storeHistory('Selection changed')
 
+
+
+        #DESELECT ALL
+        if item is None:
+            self.grScene.itemDeselected.emit()
+
         super().mouseReleaseEvent(event)
 
     def rightMouseButtonRelease(self, event):

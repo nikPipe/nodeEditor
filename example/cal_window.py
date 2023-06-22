@@ -5,6 +5,7 @@ from nodeEditor.node_sertializable import Serializable
 from nodeEditor.node_editor_window import NdeEditorWindow
 from nodeEditor.example.cal_sub_window import calSubWindow
 from nodeEditor.utils import *
+from nodeEditor.example.calc_drag_listWidget import QDMListBox
 import math
 
 class calWindow(NdeEditorWindow):
@@ -29,6 +30,7 @@ class calWindow(NdeEditorWindow):
         self.windowMapper = QSignalMapper(self)
         self.windowMapper.mapped[QWidget].connect(self.setActiveSubWindow)
 
+        self.createDockWindows()
         self.createActions()
         self.createMenus()
         self.createToolBars()
@@ -37,7 +39,7 @@ class calWindow(NdeEditorWindow):
         self.readSettings()
         self.writeSettings()
 
-        self.createDockWindows()
+
         self.setWindowTitle("Calculator Node Editor")
 
 
@@ -173,8 +175,6 @@ class calWindow(NdeEditorWindow):
         widget = self.mdiArea.currentSubWindow().widget()
         if widget.copyData is not None:
             widget.Paste_def(widget.copyData)
-
-
     def findMdiChild(self, fname):
         '''
 
@@ -185,7 +185,6 @@ class calWindow(NdeEditorWindow):
             if fname in wnd.widget().getUserFriendlyFilename():
                 return wnd
         return None
-
     def createMdiChild(self):
         '''
 
@@ -270,9 +269,11 @@ class calWindow(NdeEditorWindow):
         :return:
         '''
         self.nodesDock = QDockWidget("calc Node", self)
-        itemList = ['Add', 'Subtract', 'Multiply', 'Divide', 'Modulus', 'Power', 'Square Root', 'Logarithm', 'Sine']
-        listWidget = self.sample_widget_template.list_widget(parent_self=self.nodesDock, items=itemList)
-        self.nodesDock.setWidget(listWidget)
+
+        self.nodeListWidget = QDMListBox()
+        self.nodesDock.setWidget(self.nodeListWidget)
+
+
         self.addDockWidget(Qt.LeftDockWidgetArea, self.nodesDock)
         self.nodesDock.setFloating(False)
         self.nodesDock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
@@ -303,7 +304,7 @@ class calWindow(NdeEditorWindow):
         toolbar_nodes = self.windowMenu.addAction("Nodes Toolbar")
         toolbar_nodes.setCheckable(True)
         toolbar_nodes.triggered.connect(self.onWindowNodesToolbar)
-        # toolbar_nodes.setChecked(self.nodesDock.isVisible())
+        toolbar_nodes.setChecked(self.nodesDock.isVisible())
 
         self.windowMenu.addSeparator()
 

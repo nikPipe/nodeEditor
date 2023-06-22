@@ -2,7 +2,7 @@
 from PyQt.import_module import *
 from nodeEditor.node_editor_widget import NodeEditorWidget
 from nodeEditor.example.calc_conf import *
-from nodeEditor.node_node import Node
+from nodeEditor.example.calcNodeBase import *
 
 
 class calSubWindow(NodeEditorWidget):
@@ -50,9 +50,9 @@ class calSubWindow(NodeEditorWidget):
             print('Got Drop: (%d) %s' % (op_code, text), 'op_code: ', op_code, 'pixmap: ', pixmap, 'mouse_position: ', mouse_position, 'scene_position: ', scene_position)
 
             #TODO: add node at scene_position
-            node = Node(self.scene, text,  inputs=[2, 4], outputs=[6])
+            node = CalNode(self.scene, op_code, text, contentLabel=text,  inputs=[1, 1], outputs=[2])
+            print('node: ', node)
             node.setPos(scene_position.x(), scene_position.y())
-            self.scene.addNode(node)
 
 
 

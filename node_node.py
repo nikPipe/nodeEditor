@@ -20,32 +20,67 @@ class Node(Serializable):
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
         self.color_variable = color_variable.COLOR_VARIABLE()
         self.styleSheet = styleSheet.STYLESHEET()
-
         self.scene = scene
         self.title = title
+        self.initInnerClasses()
+        self.initSettings()
 
-        self.content = QDMNodeContentWidget(self)
-        self.grNode = QDmGraphicsNode(self)
 
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
 
-        self.socket_spacing = 22
 
         # create socket for inputs and outputs
         self.inputs = []
         self.outputs = []
+        self.initSockets(inputs, outputs)
+
+
+
+    def initInnerClasses(self):
+        self.content = QDMNodeContentWidget(self)
+        self.grNode = QDmGraphicsNode(self)
+
+    def initSettings(self):
+        self.socket_spacing = 22
+        self.input_socket_position = LEFT_BOTTOM
+        self.output_socket_position = RIGHT_TOP
+        self.input_multi_edged = False
+        self.output_multi_edged = True
+
+    def initSockets(self, inputs, outputs, reset=True):
+        '''
+        CREATE SCOKETS
+        init the sockets
+        :param inputs:
+        :param outputs:
+        :return:
+        '''
+        if reset:
+            if hasattr(self, 'inputs') and hasattr(self, 'outputs'):
+                for socket in (self.inputs + self.outputs):
+                    self.scene.grScene.removeItem(socket.grSocket)
+
+                self.inputs = []
+                self.outputs = []
+
+        #CREATE NEW SOCKETS
+
         counter = 0
         for item in inputs:
-            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item, multi_edges=False)
+            socket = Socket(node=self, index=counter, position=self.input_socket_position, socket_type=item,
+                            multi_edges=self.input_multi_edged)
             self.inputs.append(socket)
             counter += 1
 
         counter = 0
         for item in outputs:
-            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item, multi_edges=True)
+            socket = Socket(node=self, index=counter, position=self.output_socket_position, socket_type=item,
+                            multi_edges=self.output_multi_edged)
             self.outputs.append(socket)
             counter += 1
+
+
 
     def getSocketPosition(self, index, position):
         '''

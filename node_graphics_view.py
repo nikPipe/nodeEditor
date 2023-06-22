@@ -39,6 +39,9 @@ class QDMGraphicsView(QGraphicsView):
         self.cut_line = QDMCutLine()
         self.grScene.addItem(self.cut_line)
 
+        self._drag_enter_listners = []
+        self._drop_listners = []
+
     def initUI(self):
         '''
 
@@ -50,6 +53,27 @@ class QDMGraphicsView(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
         self.setDragMode(QGraphicsView.RubberBandDrag)
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, event):
+        '''
+
+
+        :param event:
+        :return:
+        '''
+        for callaback in self._drag_enter_listners:
+            callaback(event)
+
+    def dropEvent(self, event):
+        '''
+
+        :param event:
+        :return:
+        '''
+        for callback in self._drop_listners:
+            callback(event)
+
 
     def mousePressEvent(self, event):
         '''
@@ -290,8 +314,6 @@ class QDMGraphicsView(QGraphicsView):
             if item is not None:
                 self.grScene.scene.history.storeHistory('Selection changed')
 
-
-
         #DESELECT ALL
         if item is None:
             self.grScene.itemDeselected.emit()
@@ -383,8 +405,6 @@ class QDMGraphicsView(QGraphicsView):
 
         self.scenePosChanged.emit(int(self.last_scene_mouse_position.x()), int(self.last_scene_mouse_position.y()))
 
-
-
         super().mouseMoveEvent(event)
 
     def keyPressEvent(self, event):
@@ -436,7 +456,21 @@ class QDMGraphicsView(QGraphicsView):
         self.grScene.scene.history.storeHistory('Delete selected')
 
 
+    def addDragEnterListener(self, callback):
+        '''
 
+        :param callback:
+        :return:
+        '''
+        self._drag_enter_listners.append(callback)
+
+    def addDropListener(self, callback):
+        '''
+
+        :param callback:
+        :return:
+        '''
+        self._drop_listners.append(callback)
 
 
 

@@ -191,7 +191,6 @@ class calWindow(NdeEditorWindow):
         :return:
         '''
         self.nodeEditorWidget = calSubWindow()
-        self.nodeEditorWidget.addNodes()
         subwnd = self.mdiArea.addSubWindow(self.nodeEditorWidget)
 
 
@@ -236,7 +235,6 @@ class calWindow(NdeEditorWindow):
         self.updateEditMenu()
 
     def updateEditMenu(self):
-        print('''this is updateEditMenu''')
         active = self.getCurrentNodeEditorWidget()
         hasMdiChild = (active is not None)
         self.pasteAction.setEnabled(hasMdiChild)
@@ -298,7 +296,6 @@ class calWindow(NdeEditorWindow):
                 "<a href='https://www.blenderfreak.com/'>www.BlenderFreak.com</a>")
 
     def updateWindowMenu(self):
-        print('updateWindowMenu')
         self.windowMenu.clear()
 
         toolbar_nodes = self.windowMenu.addAction("Nodes Toolbar")

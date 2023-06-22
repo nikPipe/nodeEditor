@@ -30,6 +30,12 @@ class QDMGraphicScene(QGraphicsScene):
 
         self.setBackgroundBrush(self._color_background)
 
+    def dragMoveEvent(self, event):
+        '''
+        :param event:
+        :return:
+        '''
+        pass
 
     def setGrScene(self, width, height):
         '''

@@ -102,6 +102,12 @@ class Scene(Serializable):
     def addDeSelectedItemListner(self, callback):
         self._item_deSelected_listners.append(callback)
 
+    def addDragEnterListener(self, callback):
+        self.grScene.views()[0].addDragEnterListener(callback)
+
+    def addDropListener(self, callback):
+        self.grScene.views()[0].addDropListener(callback)
+
 
     def addNode(self, node):
         '''

@@ -34,6 +34,8 @@ class CalcNode_div(CalNode):
     content_label_objectName = 'calc_node_div'
 
 
+
+
 @register_node(OP_NODE_INPUT)
 class CalcNode_input(CalNode):
     op_icon = 'icons/in.png'
@@ -56,13 +58,7 @@ class CalcNode_output(CalNode):
     content_label_objectName = 'calc_node_output'
 
     def __init__(self, scene):
-
         inputs = [0]
         outputs = []
         super().__init__(scene=scene,inputs=inputs, outputs=outputs)
 
-# register all nodes
-
-
-
-#register_node(OP_NODE_ADD, CalcNode_add)

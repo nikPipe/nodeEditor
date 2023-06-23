@@ -138,6 +138,7 @@ class QDMGraphicsView(QGraphicsView):
                                          event.modifiers() | Qt.ControlModifier)
                 super().mousePressEvent(fake_event)
                 return
+            
 
 
         if type(item) is QDMGraphicsSocket:

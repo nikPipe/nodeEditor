@@ -21,7 +21,6 @@ class calWindow(NdeEditorWindow):
 
         print('calWindow initUI')
         print('Registering node classes')
-        print(CALC_NODES)
 
         self.mdiArea = QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)

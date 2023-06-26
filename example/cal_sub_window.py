@@ -14,6 +14,14 @@ class calSubWindow(NodeEditorWidget):
         self.setTitle()
         self.scene.addDragEnterListener(self.onDragEnter)
         self.scene.addDropListener(self.onDrop)
+        self.scene.setNodeClassSelected(self.getNodesClassFromData)
+
+    def getNodesClassFromData(self, data):
+
+        if 'op_code' not in data:
+            return Node
+
+        return get_class_from_opcode(data['op_code'])
 
     def setTitle(self):
         '''

@@ -14,6 +14,8 @@ class calContent(QDMNodeContentWidget):
         label.setObjectName(self.node.content_label_objectName)
 
 
+
+
 class calGraphNode(QDmGraphicsNode):
 
     def initSize(self):
@@ -48,3 +50,14 @@ class CalNode(Node):
         super().initSettings()
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
+
+    def serialize(self):
+        res = super().serialize()
+        res['op_code'] = self.__class__.op_code
+        return res
+
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap, restore_id)
+        print('deserialize cal node', self.__class__.__name__, 'res: ', res)
+
+        return res

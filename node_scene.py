@@ -31,9 +31,11 @@ class Scene(Serializable):
         self._item_selected_listners = []
         self._item_deSelected_listners = []
 
-
-
         self.scene_width, self.scene_height = 64000, 64000
+        #STORE THE REFERENCE OF THE NODE CLASS WHICH IS SELECTED
+        self.node_class_selected = None
+
+
         self.initUI()
         self.history = SceneHistory(self)
         self.clipboard = SceneClipboard(self)
@@ -204,8 +206,22 @@ class Scene(Serializable):
 
         return False
 
+    def setNodeClassSelected(self, class_selecting_functions):
+        '''
 
+        :param node_class:
+        :return:
+        '''
+        self.node_class_selected = class_selecting_functions
 
+    def getNodeClassFromData(self, data):
+        '''
+
+        :param data:
+        :return:
+        '''
+
+        return Node if self.node_class_selected is None else self.node_class_selected(data)
 
 
     def serialize(self):
@@ -244,7 +260,9 @@ class Scene(Serializable):
 
         #CREATE NODES
         for node_data in data['nodes']:
-            Node(self).deserialize(node_data, hashmap, restore_id)
+            node = self.getNodeClassFromData(node_data)
+            print('\n\nthis is the node: ', node, '\n\n')
+            self.getNodeClassFromData(node_data)(self).deserialize(node_data, hashmap, restore_id)
 
         #CREATE EDGES
         for edge_data in data['edges']:

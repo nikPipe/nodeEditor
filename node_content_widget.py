@@ -32,15 +32,18 @@ class QDMNodeContentWidget(QWidget, Serializable):
 
 
     def serialize(self):
-        return OrderedDict([
-            ('id', self.node.id),
-            ('content', 'content')
-        ])
+
+        data = OrderedDict()
+        data['id'] = self.node.id
+        data['content'] = 'content'
+
+        return data
+
 
     def deserialize(self, data, hashmap={}):
         print("deserializing node content for %s" % self.node.id)
-        return True
 
+        return True
 
 
 

@@ -217,6 +217,9 @@ class Node(Serializable):
             new_socket.deserialize(socket_data, hashmap, restore_id)
             self.outputs.append(new_socket)
 
-        return True
+        #ALSO DESERIALIZE THE CONTENT
+        res = self.content.deserialize(data['content'], hashmap)
+
+        return True & res
 
 

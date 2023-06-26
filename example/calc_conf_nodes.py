@@ -2,7 +2,6 @@ from nodeEditor.example.calc_conf import *
 from nodeEditor.example.calcNodeBase import *
 from nodeEditor.utils import dumpException
 
-
 @register_node(OP_NODE_ADD)
 class CalcNode_add(CalNode):
     op_icon = 'icons/add.png'
@@ -35,7 +34,6 @@ class CalcNode_div(CalNode):
     content_label = '/'
     content_label_objectName = 'calc_node_div'
 
-
 class CalInputContent(QDMNodeContentWidget):
     def initUI(self):
         self.layout = QVBoxLayout()
@@ -61,8 +59,6 @@ class CalInputContent(QDMNodeContentWidget):
             dumpException(e)
         return res
 
-
-
 @register_node(OP_NODE_INPUT)
 class CalcNode_input(CalNode):
     op_icon = 'icons/in.png'
@@ -79,6 +75,8 @@ class CalcNode_input(CalNode):
     def initInnerClasses(self):
         self.content = CalInputContent(self)
         self.grNode = calGraphNode(self)
+
+
 
 
 class CalOutputContent(QDMNodeContentWidget):

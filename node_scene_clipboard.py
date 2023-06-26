@@ -40,9 +40,9 @@ class SceneClipboard():
 
 
 
-        print('  Nodes:\n    ', sel_nodes)
-        print('  Edges:\n    ', sel_edges)
-        print('  Sockets:\n    ', sel_socket)
+        #print('  Nodes:\n    ', sel_nodes)
+        #print('  Edges:\n    ', sel_edges)
+        #print('  Sockets:\n    ', sel_socket)
 
         #REMOVE ALL THE EDGES WHICH ARE NOT CONNECTED TO A NODE
         edges_to_remove = []
@@ -103,7 +103,7 @@ class SceneClipboard():
 
         #CREATE NODES
         for node_data in data['nodes']:
-            new_node = Node(self.scene)
+            new_node = self.scene.getNodeClassFromData(node_data)(self.scene)
             new_node.deserialize(node_data, hashmap, restore_id=False)
             pos = new_node.pos
             new_node.setPos(pos.x() + offset_x, pos.y() + offset_y)

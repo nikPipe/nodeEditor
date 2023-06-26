@@ -4,6 +4,7 @@ from PyQt.import_module import *
 from nodeEditor.node_node import Node
 from nodeEditor.node_graphic_node import QDmGraphicsNode
 from nodeEditor.node_content_widget import QDMNodeContentWidget
+from nodeEditor.node_socket import *
 
 
 class calContent(QDMNodeContentWidget):
@@ -23,10 +24,10 @@ class calGraphNode(QDmGraphicsNode):
         super().initSize()
         self.width = 160
         self.height = 74
-        self.edge_size = 5
-        self._padding = 8
-
-
+        self.edge_roundness = 5
+        self.edge_padding = 10
+        self._title_horizontal_padding = 8
+        self._title_vertical_padding = 10
 
 class CalNode(Node):
     op_icon = ''
@@ -36,12 +37,14 @@ class CalNode(Node):
     content_label_objectName = ''
 
     def __init__(self, scene,  inputs=[2, 2], outputs=[1]):
-
-
-
         super().__init__(scene, title=self.__class__.op_title, inputs=inputs, outputs=outputs)
 
 
     def initInnerClasses(self):
         self.content = calContent(self)
         self.grNode = calGraphNode(self)
+
+    def initSettings(self):
+        super().initSettings()
+        self.input_socket_position = LEFT_CENTER
+        self.output_socket_position = RIGHT_CENTER

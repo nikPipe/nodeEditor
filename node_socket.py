@@ -6,13 +6,14 @@ from nodeEditor.node_sertializable import Serializable
 
 
 LEFT_TOP = 1
-LEFT_BOTTOM = 2
-RIGHT_TOP = 3
-RIGHT_BOTTOM = 4
-
+LEFT_CENTER = 2
+LEFT_BOTTOM = 3
+RIGHT_TOP = 4
+RIGHT_CENTER = 5
+RIGHT_BOTTOM = 6
 
 class Socket(Serializable):
-    def __init__(self, node, index=0, position=LEFT_TOP, socket_type=1, multi_edges=True):
+    def __init__(self, node, index=0, position=LEFT_TOP, socket_type=1, multi_edges=True, count_on_this_node_side=1, is_input=False):
         '''
 
         :param node:
@@ -31,11 +32,24 @@ class Socket(Serializable):
         self.position = position
         self.socket_type = socket_type
         self.is_multi_edges = multi_edges
+        self.count_on_this_node_side = count_on_this_node_side
+        self.is_input = is_input
+        self.is_output = not self.is_input
 
         self.grSocket = QDMGraphicsSocket(self.node.grNode, self.socket_type, self)
         self.grSocket.setPos(*self.node.getSocketPosition(index, position))
 
+        self.setSocketPosition()
+
         self.edges = []
+
+    def setSocketPosition(self):
+        '''
+
+        :param position:
+        :return:
+        '''
+        self.grSocket.setPos(*self.node.getSocketPosition(self.index, self.position, self.count_on_this_node_side))
 
     def getSocketPosition(self):
         '''
@@ -44,7 +58,7 @@ class Socket(Serializable):
         :param position:
         :return:
         '''
-        return self.node.getSocketPosition(self.index, self.position)
+        return self.node.getSocketPosition(self.index, self.position, self.count_on_this_node_side)
 
     def addEdge(self, edge):
         '''

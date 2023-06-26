@@ -305,7 +305,7 @@ class NodeEditorWidget(QWidget):
 
         :return:
         '''
-        self.scene.grScene.views()[0].deleteSelected()
+        self.scene.getView().deleteSelected()
 
 
     def readSettings(self):

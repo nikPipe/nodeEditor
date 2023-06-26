@@ -105,10 +105,11 @@ class Scene(Serializable):
         self._item_deSelected_listners.append(callback)
 
     def addDragEnterListener(self, callback):
-        self.grScene.views()[0].addDragEnterListener(callback)
+
+        self.getView().addDragEnterListener(callback)
 
     def addDropListener(self, callback):
-        self.grScene.views()[0].addDropListener(callback)
+        self.getView().addDropListener(callback)
 
 
     def addNode(self, node):
@@ -223,6 +224,20 @@ class Scene(Serializable):
 
         return Node if self.node_class_selected is None else self.node_class_selected(data)
 
+    def getItemAt(self, position):
+        '''
+
+        :param position:
+        :return:
+        '''
+        return self.getView().itemAt(position)
+
+    def getView(self):
+        '''
+
+        :return:
+        '''
+        return self.grScene.views()[0]
 
     def serialize(self):
         '''

@@ -18,7 +18,6 @@ EDGE_DRAG_START_THRESHOLD = 10
 class QDMGraphicsView(QGraphicsView):
     scenePosChanged = pyqtSignal(int, int)
 
-
     def __init__(self, grScene, parent=None):
         super().__init__(parent)
         self.sample_widget_template = sample_widget_template.SAMPLE_WIDGET_TEMPLATE()
@@ -170,14 +169,14 @@ class QDMGraphicsView(QGraphicsView):
         :return:
         '''
         super().mousePressEvent(event)
-
+        '''
         item = self.getItemAtClick(event)
         if isinstance(item, QDMGraphicsEdge):
             print(item.edge, '  connected sockets: ', item.edge.start_socket, '<------->',item.edge.end_socket)
 
         if type(item) is QDMGraphicsSocket:
             print(item.socket, ' has Edge: ', item.socket.edges)
-
+        
         if item is None:
             print('Scene:')
             print('Nodes:')
@@ -187,7 +186,7 @@ class QDMGraphicsView(QGraphicsView):
             for edge in self.grScene.scene.edges:
                 print('  {}'.format(edge))
             print('Socket:')
-
+        '''
     def middleMouseButtonRelease(self, event):
         '''
 

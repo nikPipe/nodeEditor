@@ -65,7 +65,7 @@ class SceneClipboard():
 
         # IF CUT WAS SELECTED, DELETE ALL THE SELECTED ITEMS
         if delete:
-            self.scene.grScene.views()[0].deleteSelected()
+            self.scene.getView().deleteSelected()
             #store history
             self.scene.history.storeHistory('Cut out elements from scene')
 
@@ -80,7 +80,7 @@ class SceneClipboard():
         print('SceneClipboard.deserializeFromClipboard()', data)
         hashmap = {}
         #CALCULATE MOUSE POSITION
-        view = self.scene.grScene.views()[0]
+        view = self.scene.getView()
         mouse_position = view.last_scene_mouse_position
         print('  Mouse position:', mouse_position.x(), mouse_position.y())
 

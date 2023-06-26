@@ -35,6 +35,11 @@ class Node(Serializable):
         self.outputs = []
         self.initSockets(inputs, outputs)
 
+        #DIRTY AND EVELUATION FLAGS
+        self._is_dirty = False
+        self._is_invalid = False
+
+
 
 
     def initInnerClasses(self):
@@ -81,8 +86,6 @@ class Node(Serializable):
                             is_input=False)
             self.outputs.append(socket)
             counter += 1
-
-
 
     def getSocketPosition(self, index, position, num_out_of=1):
         '''
@@ -135,7 +138,6 @@ class Node(Serializable):
         '''
         self.grNode.setPos(x, y)
 
-
     def updateConnectedEdges(self):
         '''
         update the connected edges
@@ -169,7 +171,88 @@ class Node(Serializable):
 
         self.scene.removeNode(self)
 
+    #NODE EVALUATION
+    def isDirty(self):
+        return self._is_dirty
 
+    def markDirty(self, new_value=True):
+        self._is_dirty = new_value
+        if self._is_dirty:
+            self.onmarkDirty()
+
+    def onmarkDirty(self):
+        pass
+
+    def markChildrenDirty(self, new_value=True):
+        for node in self.getChildrenNodes():
+            node.markDirty(new_value)
+
+
+    def markDescendantsDirty(self, new_value=True):
+        for node in self.getChildrenNodes():
+            node.markDirty(new_value)
+            node.markChildrenDirty(new_value)
+
+
+
+    def isInvalide(self):
+        return self._is_invalid
+
+    def markInvalid(self, new_value=True):
+        self._is_invalid = new_value
+        if self._is_invalid:
+            self.onmarkInvalid()
+
+    def markChildrenInvalid(self, new_value=True):
+        for node in self.getChildrenNodes():
+            node.markInvalid(new_value)
+
+
+    def markDescendantsInvalid(self, new_value=True):
+        for node in self.getChildrenNodes():
+            node.markInvalid(new_value)
+            node.markChildrenInvalid(new_value)
+
+    def onmarkInvalid(self):
+        pass
+
+    def eval(self):
+        '''
+        evaluate the node
+        :return:
+        '''
+        self.markDirty(False)
+        self.markInvalid(False)
+
+        return 0
+
+    def evalChildren(self):
+        '''
+        evaluate the children
+        :return:
+        '''
+        for node in self.getChildrenNodes():
+            node.eval()
+
+
+    #TRAVERSING FUNCTIONS
+    def getChildrenNodes(self):
+        '''
+        get the children nodes
+        :return:
+        '''
+        if self.outputs == []:
+            return []
+        other_nodes = []
+        for eachIndex in range(len(self.outputs)):
+            for edge in self.outputs[0].edges:
+                other_nodes.append(edge.getOtherSocket(self.outputs[eachIndex]).node)
+
+        return other_nodes
+
+
+
+    #SERIALIZATION AND DESERIALIZATION
     def serialize(self):
         '''
 

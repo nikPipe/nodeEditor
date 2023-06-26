@@ -30,6 +30,13 @@ class Edge(Serializable):
         self.scene.addEdge(self)
 
 
+    def getOtherSocket(self, known_socket):
+        '''
+        :param known_socket:
+        :return:
+        '''
+        return self.start_socket if known_socket == self.end_socket else self.end_socket
+
     @property
     def end_socket(self):
         '''

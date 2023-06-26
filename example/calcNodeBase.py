@@ -31,6 +31,30 @@ class calGraphNode(QDmGraphicsNode):
         self._title_horizontal_padding = 8
         self._title_vertical_padding = 10
 
+    def initAssets(self):
+        super().initAssets()
+        self._icon = QImage('icons/status_icons.png')
+
+    def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
+        super().paint(painter, QStyleOptionGraphicsItem, widget)
+        offset = 24.0
+        if self.node.isDirty():
+            offset = 0.0
+        if self.node.isInvalide():
+            offset = 48.0
+
+        painter.drawImage(
+            QRectF(-10, 10, 24.0, 24.0),
+            self._icon,
+            QRectF(offset, 0.0, 24.0, 24.0)
+        )
+
+
+
+
+
+
+
 class CalNode(Node):
     op_icon = ''
     op_code = 0

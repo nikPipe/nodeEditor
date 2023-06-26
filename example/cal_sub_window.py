@@ -108,6 +108,7 @@ class calSubWindow(NodeEditorWidget):
         print('handleNodeContextMenu')
         contextMenu = QMenu()
         markDirtyAction = contextMenu.addAction('Mark Dirty')
+        markDirtyDescendantsAction = contextMenu.addAction('Mark Dirty Descendants')
         markInvalidAction = contextMenu.addAction('Mark Invalid')
         unmarkInvalidAction = contextMenu.addAction('Unmark Invalid')
         evalAction = contextMenu.addAction('Eval')
@@ -126,6 +127,23 @@ class calSubWindow(NodeEditorWidget):
             selected = item.socket.node
 
         print('item: ', item)
+        if selected and action == markDirtyAction:
+            selected.markDirty()
+
+        if selected and action == markDirtyDescendantsAction:
+            selected.markDescendantsDirty()
+
+        if selected and action == markInvalidAction:
+            selected.markInvalid()
+
+        if selected and action == unmarkInvalidAction:
+            selected.markInvalid(False)
+
+
+
+        if selected and action == evalAction:
+            val = selected.eval()
+            print('Evaluated to: ', val)
 
 
     def handleEdgeContextMenu(self, event):

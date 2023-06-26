@@ -87,6 +87,25 @@ class Node(Serializable):
             self.outputs.append(socket)
             counter += 1
 
+    def onEdgeConnectionChanged(self, new_edge):
+        '''
+        this function is called when the edge connection is changed
+        :param new_edge:
+        :return:
+        '''
+        print("edge connection changed", new_edge)
+
+    def onInputChanged(self, new_edge):
+        '''
+        this function is called when the input is changed
+        :param socket:
+        :return:
+        '''
+        print("input changed", new_edge)
+        self.markDirty()
+        self.markDescendantsDirty()
+
+
     def getSocketPosition(self, index, position, num_out_of=1):
         '''
         get the position of the socket
@@ -195,7 +214,7 @@ class Node(Serializable):
 
 
 
-    def isInvalide(self):
+    def isInvalid(self):
         return self._is_invalid
 
     def markInvalid(self, new_value=True):

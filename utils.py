@@ -4,7 +4,7 @@ import os
 
 
 def dumpException(e):
-    print('Exception: %s' % e)
+    print('%s Exception: %s' % (e.__class.__name__, e))
     traceback.print_tb(e.__traceback__)
 
 

@@ -5,6 +5,7 @@ from nodeEditor.node_node import Node
 from nodeEditor.node_graphic_node import QDmGraphicsNode
 from nodeEditor.node_content_widget import QDMNodeContentWidget
 from nodeEditor.node_socket import *
+from nodeEditor.utils import dumpException
 
 
 class calContent(QDMNodeContentWidget):
@@ -40,7 +41,7 @@ class calGraphNode(QDmGraphicsNode):
         offset = 24.0
         if self.node.isDirty():
             offset = 0.0
-        if self.node.isInvalide():
+        if self.node.isInvalid():
             offset = 48.0
 
         painter.drawImage(
@@ -48,10 +49,6 @@ class calGraphNode(QDmGraphicsNode):
             self._icon,
             QRectF(offset, 0.0, 24.0, 24.0)
         )
-
-
-
-
 
 
 
@@ -65,6 +62,9 @@ class CalNode(Node):
     def __init__(self, scene,  inputs=[2, 2], outputs=[1]):
         super().__init__(scene, title=self.__class__.op_title, inputs=inputs, outputs=outputs)
 
+        self.value = None
+        self.markDirty()
+
 
     def initInnerClasses(self):
         self.content = calContent(self)
@@ -74,6 +74,40 @@ class CalNode(Node):
         super().initSettings()
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
+
+
+    def evalImplementation(self):
+        '''
+
+        :return:
+        '''
+        return 123
+
+    def eval(self):
+
+        if not self.isDirty() and not self.isInvalid():
+            print('skip eval')
+            return self.value
+
+        try:
+            val =  self.evalImplementation()
+            self.markDirty(False)
+            self.markInvalid(False)
+            return val
+
+
+        except Exception as e:
+            self.markInvalid()
+            dumpException(e)
+
+
+
+
+    def onInputChanged(self, socket=None):
+        print('onInputChanged')
+        self.markDirty()
+        self.eval()
+
 
     def serialize(self):
         res = super().serialize()
@@ -85,3 +119,4 @@ class CalNode(Node):
         print('deserialize cal node', self.__class__.__name__, 'res: ', res)
 
         return res
+

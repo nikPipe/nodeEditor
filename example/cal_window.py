@@ -7,7 +7,6 @@ from nodeEditor.example.cal_sub_window import calSubWindow
 from nodeEditor.utils import *
 from nodeEditor.example.calc_drag_listWidget import QDMListBox
 from nodeEditor.example.calc_conf import *
-from nodeEditor.example.calc_conf_nodes import *
 import math
 
 class calWindow(NdeEditorWindow):
